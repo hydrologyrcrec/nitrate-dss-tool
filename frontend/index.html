@@ -14,7 +14,7 @@
   />
 
   <!-- Our custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -103,7 +103,7 @@
   
       document.getElementById("station-items").innerHTML = "";
   
-      fetch("http://127.0.0.1:5002/api/stations-in-polygon", {
+      fetch("https://nitrate-dss-tool-rtln.onrender.com/api/stations-in-polygon", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ coordinates: coordinates })
