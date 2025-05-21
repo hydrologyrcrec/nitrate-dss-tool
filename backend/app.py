@@ -1,27 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import psycopg2
 from dotenv import load_dotenv
 import os
+from db import get_db_connection
+from auth.routes import auth_bp
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-def get_db_connection():
-    try:
-        conn = psycopg2.connect(
-            dbname=os.getenv("DB_NAME"),
-            user=os.getenv("DB_UNAME"),
-            password=os.getenv("DB_PW"),
-            host=os.getenv("DB_HOST_NAME"),
-            port=os.getenv("DB_PORT")
-        )
-        return conn
-    except Exception as e:
-        print("Database connection failed:", e)
-        return None
+app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
 @app.route("/api/stations-in-polygon", methods=["POST"])
 def get_stations():
