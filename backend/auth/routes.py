@@ -19,15 +19,8 @@ def signin_route():
             "message": response["message"]
         }))
 
-        res.set_cookie("accessToken", json.dumps({
-            "act": response["access_token"],
-            "email": data["email"]
-        }), secure=True, httponly=False, samesite="Strict", max_age=900)
-
-        res.set_cookie("auth", json.dumps({
-            "rft": response["refresh_token"],
-            "email": data["email"]
-        }), secure=True, httponly=True, samesite="Strict", max_age=86400)
+        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="Strict", max_age=900)
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="Strict", max_age=86400)
 
         res.headers["authorization"] = response["access_token"]
         return res
@@ -47,15 +40,8 @@ def signup_route():
             "message": response["message"]
         }))
 
-        res.set_cookie("accessToken", json.dumps({
-            "act": response["access_token"],
-            "email": data["email"]
-        }), secure=True, httponly=False, samesite="Strict", max_age=900)
-
-        res.set_cookie("auth", json.dumps({
-            "rft": response["refresh_token"],
-            "email": data["email"]
-        }), secure=True, httponly=True, samesite="Strict", max_age=86400)
+        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="Strict", max_age=900)
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="Strict", max_age=86400)
 
         res.headers["authorization"] = response["access_token"]
         return res
