@@ -1,11 +1,14 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 from auth.service import signin, signup
 import json
+from flask_cors import CORS 
 
 auth_bp = Blueprint("auth", __name__)
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route("/signin", methods=["POST", "OPTIONS"], provide_automatic_options=True)
 def signin_route():
+    if request.method == "OPTIONS":
+        return '', 200
     data = request.get_json()
     response = signin(data)
     if response["authenticated"]:
@@ -31,7 +34,8 @@ def signin_route():
     else:
         return jsonify({"authenticated": False, "message": response["message"]}), 401
 
-@auth_bp.route("/signup", methods=["POST"])
+
+@auth_bp.route("/signup", methods=["POST", "OPTIONS"], provide_automatic_options=True)
 def signup_route():
     data = request.get_json()
     response = signup(data)

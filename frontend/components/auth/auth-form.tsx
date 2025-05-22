@@ -29,19 +29,22 @@ export function AuthForm({ type }: AuthFormProps) {
               email: data.email,
               password: data.password,
             };
-      const response = await apiUrl.post(route, body);
+      const response = await apiUrl.post(route, body, {withCredentials: true,
+        headers: {
+          "Content-Type": "application/json"
+        }});
       if (response.headers["authorization"]) {
-        apiUrl.defaults.headers.common["Authorization"] =
+        apiUrl.defaults.headers.common["authorization"] =
           response.headers["authorization"];
         sessionStorage.setItem(
           "authorization",
           response.headers["authorization"]
         );
       } else if (sessionStorage.getItem("authorization")) {
-        apiUrl.defaults.headers.common["Authorization"] =
+        apiUrl.defaults.headers.common["authorization"] =
           sessionStorage.getItem("authorization");
       }
-      if (response.data.Authenticated) {
+      if (response.data.authenticated) {
         sessionStorage.setItem("email", data.email);
         sessionStorage.setItem("userName", response.data.userName);
         router.push(`/draw`);

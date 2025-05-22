@@ -8,11 +8,15 @@ from auth.routes import auth_bp
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app,
+     origins=os.getenv("WEBSITE_URL", "http://localhost:3000"),
+     supports_credentials=True,
+     allow_headers=["Content-Type", "authorization"],
+     methods=["GET", "POST", "OPTIONS"])
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
-@app.route("/api/stations-in-polygon", methods=["POST"])
+@app.route("/api/stations-in-polygon", methods=["POST" ])
 def get_stations():
     data = request.get_json()
     coordinates = data.get("coordinates")
