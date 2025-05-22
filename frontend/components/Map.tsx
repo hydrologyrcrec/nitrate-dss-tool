@@ -6,6 +6,7 @@ import L from 'leaflet'
 import 'leaflet-draw'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
+import { apiUrl } from './apiurl'
 delete (L.Icon.Default.prototype as any)._getIconUrl
 
 L.Icon.Default.mergeOptions({
@@ -48,15 +49,8 @@ export default function Map() {
       const latlngs = layer.getLatLngs()[0]
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat])
 
-      const response = await fetch(
-        'https://nitrate-dss-tool-rtln.onrender.com/api/stations-in-polygon',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ coordinates }),
-        }
-      )
-      const data = await response.json()
+      const response = await apiUrl.post('/api/stations-in-polygon', { coordinates })
+      const data = response.data
       const list = document.getElementById('station-items')
       if (list) list.innerHTML = ''
 

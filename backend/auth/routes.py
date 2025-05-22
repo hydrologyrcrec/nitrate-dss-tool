@@ -19,9 +19,8 @@ def signin_route():
             "message": response["message"]
         }))
 
-        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="Strict", max_age=900)
-        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="Strict", max_age=86400)
-
+        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900)
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400)
         res.headers["authorization"] = response["access_token"]
         return res
     else:
@@ -40,8 +39,8 @@ def signup_route():
             "message": response["message"]
         }))
 
-        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="Strict", max_age=900)
-        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="Strict", max_age=86400)
+        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900)
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400)
 
         res.headers["authorization"] = response["access_token"]
         return res
