@@ -47,7 +47,9 @@ export function AuthForm({ type }: AuthFormProps) {
       if (response.data.authenticated) {
         sessionStorage.setItem("email", data.email);
         sessionStorage.setItem("userName", response.data.userName);
-        router.push(`/draw`);
+        // router.push(`/draw`);
+        // window.location.href = "/draw";
+        window.location.assign("https://nitrate-dss-tool-lo1r.onrender.com/draw");
       } else {
         console.error("Authentication failed");
       }

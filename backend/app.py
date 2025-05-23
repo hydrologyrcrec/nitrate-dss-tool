@@ -53,21 +53,21 @@ def get_stations():
 
         station_map = {}
         for row in rows:
-            station_id = row[0]
+            station_id = str(row['station_id']) 
             if station_id not in station_map:
                 station_map[station_id] = {
                     "id": station_id,
-                    "name": row[1],
-                    "lng": row[2],
-                    "lat": row[3],
+                    "name": row['station_name'],
+                    "lng": row['st_x'],
+                    "lat": row['st_y'],
                     "links": []
                 }
 
-            if row[4]:
+            if row['link_label']:
                 station_map[station_id]["links"].append({
-                    "label": row[4],
-                    "url": row[5],
-                    "type": row[6]
+                    "label": row['link_label'],
+                    "url": row['link_url'],
+                    "type": row['data_type']
                 })
 
         return jsonify(list(station_map.values()))
