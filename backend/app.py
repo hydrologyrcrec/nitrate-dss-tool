@@ -9,9 +9,9 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app,
-     origins=[os.getenv("WEBSITE_URL", "http://localhost:3000"), "http://localhost:3000"],
      supports_credentials=True,
-     allow_headers=["Content-Type", "authorization"],
+     resources={r"/api/*": {"origins": ["http://localhost:3000", os.environ.get("WEBSITE_URL")]}},
+     allow_headers=["Content-Type", "Authorization"],
      methods=["GET", "POST", "OPTIONS"])
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
