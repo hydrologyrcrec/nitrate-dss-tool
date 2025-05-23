@@ -16,7 +16,7 @@ CORS(app,
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
-@app.route("/api/stations-in-polygon", methods=["POST" ])
+@app.route("/api/stations-in-polygon", methods=["POST"])
 def get_stations():
     data = request.get_json()
     coordinates = data.get("coordinates")

@@ -16,12 +16,13 @@ def signin_route():
             "email": data["email"],
             "username": response["username"],
             "authenticated": True,
-            "message": response["message"]
+            "message": response["message"],
+            "access_token": response["access_token"]
         }))
 
-        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, path="/")
-        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
-        res.headers["authorization"] = response["access_token"]
+        # res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, domain=".onrender.com", path="/")
+        # res.headers["authorization"] = response["access_token"]
         return res
     else:
         return jsonify({"authenticated": False, "message": response["message"]}), 401
@@ -29,6 +30,8 @@ def signin_route():
 
 @auth_bp.route("/signup", methods=["POST", "OPTIONS"], provide_automatic_options=True)
 def signup_route():
+    if request.method == "OPTIONS":
+        return '', 200
     data = request.get_json()
     response = signup(data)
     if response["authenticated"]:
@@ -36,13 +39,13 @@ def signup_route():
             "email": data["email"],
             "username": response["username"],
             "authenticated": True,
-            "message": response["message"]
+            "message": response["message"],
+            "access_token": response["access_token"]
         }))
 
-        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
+        # res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
         res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, domain=".onrender.com", path="/")
-
-        res.headers["authorization"] = response["access_token"]
+        # res.headers["authorization"] = response["access_token"]
         return res
     else:
         return jsonify({"authenticated": False, "message": response["message"]}), 400

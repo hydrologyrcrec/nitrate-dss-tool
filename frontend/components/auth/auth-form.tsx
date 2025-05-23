@@ -29,26 +29,22 @@ export function AuthForm({ type }: AuthFormProps) {
               email: data.email,
               password: data.password,
             };
-      const response = await apiUrl.post(route, body, {withCredentials: true,
-        headers: {
-          "Content-Type": "application/json"
-        }});
-      if (response.headers["authorization"]) {
-        apiUrl.defaults.headers.common["authorization"] =
-          response.headers["authorization"];
-        sessionStorage.setItem(
-          "authorization",
-          response.headers["authorization"]
-        );
-      } else if (sessionStorage.getItem("authorization")) {
-        apiUrl.defaults.headers.common["authorization"] =
-          sessionStorage.getItem("authorization");
-      }
+      const response = await apiUrl.post(route, body);
       if (response.data.authenticated) {
+        const cookieRes = await fetch("/api/set-cookie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            accessToken: response.data.accessToken,
+          }),
+        });
+        if (!cookieRes.ok) {
+          console.error("Failed to set cookie");
+          return;
+        }
         sessionStorage.setItem("email", data.email);
         sessionStorage.setItem("userName", response.data.userName);
-        // router.push(`/draw`);
-        window.location.href = "/draw" // forces full reload
+        router.push(`/draw`);
       } else {
         console.error("Authentication failed");
       }
