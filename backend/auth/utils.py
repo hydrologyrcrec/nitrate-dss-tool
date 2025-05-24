@@ -26,3 +26,26 @@ def generate_tokens(user: str):
     )
 
     return access_token, refresh_token
+
+def generate_new_access_token(refresh_token: str):
+    try:
+        payload = jwt.decode(
+            refresh_token,
+            os.getenv("REFRESH_TOKEN_SECRET", "supersecret"),
+            algorithms=["HS256"]
+        )
+        email = payload["email"]
+
+        access_token = jwt.encode(
+            {"email": email, "exp": datetime.now(timezone.utc) + timedelta(minutes=15)},
+            os.getenv("ACCESS_TOKEN_SECRET", "jwtsecret"),
+            algorithm="HS256"
+        )
+        return access_token
+
+    except jwt.ExpiredSignatureError:
+        print("Refresh token expired.")
+        return None
+    except jwt.InvalidTokenError:
+        print("Invalid refresh token.")
+        return None

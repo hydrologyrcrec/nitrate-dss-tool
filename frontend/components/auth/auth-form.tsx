@@ -15,6 +15,7 @@ interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function AuthForm({ type }: AuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
   const form = useForm();
   const router = useRouter();
   async function onSubmit(data: any) {
@@ -46,6 +47,7 @@ export function AuthForm({ type }: AuthFormProps) {
         sessionStorage.setItem("userName", response.data.userName);
         router.push(`/draw`);
       } else {
+        setError(response.data.message);
         console.error("Authentication failed");
       }
     } catch (error) {
@@ -104,6 +106,7 @@ export function AuthForm({ type }: AuthFormProps) {
             )}
             {type === "login" ? "Sign In" : "Sign Up"}
           </Button>
+          {error && <p className="text-center"><span style={{ color: "red" }}>{error}</span></p>}
         </div>
       </form>
     </div>

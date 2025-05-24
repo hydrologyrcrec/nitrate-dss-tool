@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app
 from auth.service import signin, signup
 import json
 from flask_cors import CORS 
+from auth.utils import generate_new_access_token
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -17,7 +18,7 @@ def signin_route():
             "username": response["username"],
             "authenticated": True,
             "message": response["message"],
-            "access_token": response["access_token"]
+            "accessToken": response["access_token"]
         }))
 
         # res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
@@ -25,7 +26,7 @@ def signin_route():
         # res.headers["authorization"] = response["access_token"]
         return res
     else:
-        return jsonify({"authenticated": False, "message": response["message"]}), 401
+        return jsonify({"authenticated": False, "message": response["message"]}), 200
 
 
 @auth_bp.route("/signup", methods=["POST", "OPTIONS"], provide_automatic_options=True)
@@ -40,7 +41,7 @@ def signup_route():
             "username": response["username"],
             "authenticated": True,
             "message": response["message"],
-            "access_token": response["access_token"]
+            "accessToken": response["access_token"]
         }))
 
         # res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
@@ -48,4 +49,22 @@ def signup_route():
         # res.headers["authorization"] = response["access_token"]
         return res
     else:
-        return jsonify({"authenticated": False, "message": response["message"]}), 400
+        return jsonify({"authenticated": False, "message": response["message"]}), 200
+
+@auth_bp.route("/refresh-token", methods=["POST"])
+def refresh_token_route():
+    refresh_token = request.cookies.get("refreshToken")
+    if not refresh_token:
+        return jsonify({"error": "No refresh token"}), 401
+    new_access_token = generate_new_access_token(refresh_token)
+    if not new_access_token:
+        return jsonify({"error": "Refresh token Expired. Please Login again"}), 401
+    res = make_response(jsonify({"accessToken": new_access_token}))
+    return res
+
+@auth_bp.route("/logout", methods=["POST"])
+def logout_route():
+    res = make_response(jsonify({"message": "Logged out"}))
+    res.set_cookie("accessToken", "", max_age=0, secure=True, httponly=True, samesite="None")
+    res.set_cookie("refreshToken", "", max_age=0, secure=True, httponly=True, samesite="None")
+    return res

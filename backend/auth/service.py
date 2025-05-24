@@ -18,7 +18,7 @@ def signup(data):
 
     conn = get_db_connection()
     if not conn:
-        return {"message": "Failed to connect to the database", "authenticated": False}
+        return {"message": "Internal server error", "authenticated": False}
 
     try:
         cursor = conn.cursor()
@@ -45,8 +45,8 @@ def signup(data):
         }
 
     except Exception as e:
-        print("Database query failed during signup:", e)
-        return {"message": "Failed to create new user", "authenticated": False}
+        print("Database query failed:", e)
+        return {"message": "Error while signing up", "authenticated": False}
 
     finally:
         conn.close()
@@ -64,8 +64,11 @@ def signin(data):
         cursor.execute(query, (email,))
         record = cursor.fetchone()
 
-        if not record or not check_password(password, record["password"]):
-            return {"message": "Invalid credentials", "authenticated": False}
+        if not record:
+            return {"message": "Email does not exist! Try Signing Up", "authenticated": False}
+        
+        if not check_password(password, record["password"]):
+            return {"message": "Incorrect Password! Enter Correct Password", "authenticated": False}
 
         access_token, refresh_token = generate_tokens(email)
         return {
@@ -78,7 +81,7 @@ def signin(data):
 
     except Exception as e:
         print("Database query failed:", e)
-        return {"message": "Failed to sign in", "authenticated": False}
+        return {"message": "Error while signing in", "authenticated": False}
 
     finally:
         cursor.close()
