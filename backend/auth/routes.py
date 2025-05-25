@@ -22,7 +22,7 @@ def signin_route():
         }))
 
         # res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
-        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, domain=".onrender.com", path="/")
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
         # res.headers["authorization"] = response["access_token"]
         return res
     else:
@@ -45,7 +45,7 @@ def signup_route():
         }))
 
         # res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=900, domain=".onrender.com", path="/")
-        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, domain=".onrender.com", path="/")
+        res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
         # res.headers["authorization"] = response["access_token"]
         return res
     else:
@@ -54,9 +54,11 @@ def signup_route():
 @auth_bp.route("/refresh-token", methods=["POST"])
 def refresh_token_route():
     refresh_token = request.cookies.get("refreshToken")
+    print("refresh_token is:", refresh_token)
     if not refresh_token:
         return jsonify({"error": "No refresh token"}), 401
     new_access_token = generate_new_access_token(refresh_token)
+    print("new_access_token is:", new_access_token)
     if not new_access_token:
         return jsonify({"error": "Refresh token Expired. Please Login again"}), 401
     res = make_response(jsonify({"accessToken": new_access_token}))
