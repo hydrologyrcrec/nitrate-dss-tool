@@ -32,7 +32,7 @@ export default function Sidebar() {
       <div className="sidebar-section">
         <div className="section-header">▶ Tools</div>
         <div className="section-content">
-          <div className="subsection" style={{ color: '#777' }}>Coming soon...</div>
+          <div className="subsection">AI Prediction</div>
         </div>
       </div>
 

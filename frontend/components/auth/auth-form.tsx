@@ -100,7 +100,7 @@ export function AuthForm({ type }: AuthFormProps) {
               {...form.register("password")}
             />
           </div>
-          <Button disabled={isLoading}>
+          <Button disabled={isLoading} className="bg-[#076b8d] hover:bg-[#2d7e99]">
             {isLoading && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
