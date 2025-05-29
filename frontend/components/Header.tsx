@@ -25,11 +25,11 @@ export default function Header() {
   }
 
   return (
-    <header className="top-header">
-      <h1>Hydrology AI Tool</h1>
-      <div className="flex gap-4">
-        <button onClick={handleDrawClick}>Draw a Polygon</button>
-        <button id="logout" onClick={handleLogout}> Logout </button>
+    <header className="z-30 fixed top-0 left-0 w-full bg-[#076b8d] h-[60px] text-white flex items-center justify-between">
+      <h1 className="text-3xl ml-4">Hydrology AI Tool</h1>
+      <div className="flex gap-4 pr-6">
+        <button className="cursor-pointer bg-[#007bff] text-white border-none px-3 py-2 rounded text-base hover:bg-[#0056b3]" onClick={handleDrawClick}>Draw a Polygon</button>
+        <button className="cursor-pointer bg-[red] text-white border-none px-3 py-2 rounded text-base hover:bg-red-700 " onClick={handleLogout}> Logout </button>
       </div>
     </header>
   )

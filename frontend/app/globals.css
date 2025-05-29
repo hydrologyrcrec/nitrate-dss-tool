@@ -50,51 +50,21 @@ html, body {
   height: 100%;
 }
 
-/* Header bar */
-.top-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #076b8d;
-  /* background-color: rgba(0, 0, 0, 0.8); */
-  padding: 10px 20px;
-  height: 60px;
-  box-sizing: border-box;
-  color: white;
-}
-
-.top-header h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-.top-header button {
-  cursor: pointer;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-#logout {
-  background-color: red;
-}
-
-.top-header button:hover {
-  background: #0056b3;
-}
-
 /* Page Layout */
 .page-container {
   display: flex;
-  height: calc(100vh - 60px); /* 60px is header */
+  height: calc(100vh - 60px);
 }
 
 /* Map Styles */
 #map {
+  height: 100%;
+  width: 100%;
   flex: 3;
+  overflow: scroll;
+  position: fixed;
+  z-index: 30;
+  top: 60px
 }
 
 /* Sidebar Styles */
@@ -103,6 +73,7 @@ html, body {
   background-color: #f7f7f7;
   padding: 15px;
   overflow-y: auto;
+  max-height: 100vh;
   border-left: 2px solid #ccc;
   scroll-behavior: smooth;
 }
@@ -144,10 +115,13 @@ html, body {
   color: #333;
 }
 
-#station-items {
+/* #station-items {
   list-style: none;
   padding-left: 0;
-}
+  margin-top: 8px;
+  overflow: scroll;
+  max-height: none;
+} */
 
 #station-items li {
   background-color: white;
@@ -187,6 +161,22 @@ html, body {
 /* Open state */
 .section-header.open + .section-content {
   padding-top: 8px;
+}
+
+/* .section-content.open {
+  max-height: none;
+} */
+
+.subsection {
+  padding-left: 1rem;
+}
+
+.subsection .subsection {
+  padding-left: 1.5rem;
+}
+
+.subsection .subsection .subsection {
+  padding-left: 2rem;
 }
 
 :root {
