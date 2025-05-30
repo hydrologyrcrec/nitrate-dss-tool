@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 import { useContext } from 'react';
 import { StationListRefContext } from '@/app/contexts/StationListContext';
 import {
@@ -16,6 +16,7 @@ import {
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
 import { ChevronDown, View, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined } from "lucide-react";
+
 export function AppSidebar() {
     const stationListRef = useContext(StationListRefContext);
     return (
@@ -37,6 +38,7 @@ export function AppSidebar() {
                     </CollapsibleContent>
                 </SidebarMenuItem>
             </Collapsible>
+
             <Collapsible defaultOpen>
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
@@ -92,9 +94,38 @@ export function AppSidebar() {
                     </CollapsibleContent>
                 </SidebarMenuItem >
             </Collapsible>
+
+            {/* NEW SECTION: BMP MODELING STUDY */}
+            <Collapsible defaultOpen>
+              <SidebarMenuItem>
+                <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
+                  <span className="flex items-center justify-center gap-2">
+                    <Map className="h-4 w-4" />
+                    BMP Modeling Study
+                  </span>
+                  <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton>Study Area</SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton>Wells</SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton>Maps</SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton>Model Setup</SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+
         </SidebarMenu>
       </Sidebar>
-      </SidebarProvider>
+    </SidebarProvider>
     );
-  }
-  
+}
