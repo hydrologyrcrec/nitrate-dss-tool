@@ -13,7 +13,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, View, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined, Package } from "lucide-react";
+import { ChevronDown, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined, Package } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 
@@ -25,13 +25,13 @@ export function AppSidebar() {
             <Collapsible defaultOpen className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                    <span className="flex items-center justify-center gap-2"><View className="h-4 w-4" />View</span>
+                    <span className="flex items-center justify-center gap-2"><Map className="h-4 w-4" />Food Susceptibility Mapping</span>
                         <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                         <SidebarMenuSub>
                             <SidebarMenuSubItem>
-                                <SidebarMenuSubButton> <span className="flex gap-2 items-center justify-center font-semibold text-sm"> <Map className="h-4 w-4"/> Food Susceptibility Mapping </span></SidebarMenuSubButton>
+                                <SidebarMenuSubButton> <span className="text-sm text-gray-500 p-2"> Coming Soon </span></SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                         </SidebarMenuSub>
                     </CollapsibleContent>
@@ -41,7 +41,7 @@ export function AppSidebar() {
             <Collapsible defaultOpen>
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                    <span className="flex items-center justify-center gap-2"><Wrench className="h-4 w-4" />Tools (Surface & Ground Water)</span>
+                    <span className="flex items-center justify-center gap-2"><Wrench className="h-4 w-4" /> Surface & Ground Water</span>
                         <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -51,20 +51,7 @@ export function AppSidebar() {
                                     <Collapsible>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                                            <span className="flex items-center justify-center gap-2"><TrendingUpDown className="h-4 w-4" /><p className="text-sm">AI Prediction</p></span>
-                                            <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                                        </CollapsibleTrigger>
-                                        <SidebarMenuSub>
-                                        <CollapsibleContent>
-                                            <span className="text-sm text-gray-500 p-2">Coming Soon</span> 
-                                        </CollapsibleContent>
-                                        </SidebarMenuSub>
-                                        </SidebarMenuSubItem>
-                                    </Collapsible>
-                                    <Collapsible>
-                                        <SidebarMenuSubItem>
-                                        <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                                            <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">Results</p></span>
+                                            <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Prediction Results</p></span>
                                             <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
@@ -77,7 +64,7 @@ export function AppSidebar() {
                                     <Collapsible>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                                            <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">Data</p></span>
+                                            <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">AI Prediction Data</p></span>
                                             <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
