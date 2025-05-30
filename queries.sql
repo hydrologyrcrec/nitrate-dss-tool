@@ -22,6 +22,22 @@ CREATE TABLE data_links (
         REFERENCES stations(station_id) ON DELETE CASCADE
 );
 
+-- 3. Surface Water Station Data Link Schema
+
+CREATE TABLE IF NOT EXISTS public.sw_data_links
+(
+    link_id SERIAL,
+    station_id numeric(21,0),
+    link_label character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    link_url text COLLATE pg_catalog."default" NOT NULL,
+    data_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT sw_data_links_pkey PRIMARY KEY (link_id),
+    CONSTRAINT sw_data_links_station_id_fkey FOREIGN KEY (station_id)
+        REFERENCES public.surface_water_stations (station_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
 -- INSERT SAMPLE RECORDS
 
 -- 1. Stations
@@ -37,3 +53,8 @@ INSERT INTO data_links (station_id, link_label, link_url, data_type)
 VALUES
 (2246751, 'Historical data', 'https://docs.google.com/spreadsheets/d/1ssVDRi6AK2B-DNi-Ina4ExJWh7hPaKf3/edit?usp=sharing&ouid=105688830716683241697&rtpof=true&sd=true', 'CSV'),
 (2246751, 'Forecasting Data', 'https://drive.google.com/forecast.pdf', 'CSV');
+
+--3. Surface Water Station Data Links
+INSERT INTO sw_data_links (station_id, link_label, link_url, data_type)
+VALUES
+(2228500, 'Historical data', 'https://docs.google.com/spreadsheets/d/12YBEzp7ATUU1bZmmRutQHDCPm5bkVBpt/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true', 'CSV')

@@ -19,6 +19,7 @@ export interface Station {
   
 export interface State {
     stations: Station[];
+    surfaceWaterStations: Station[];
     drawState: boolean
   }
 
@@ -31,10 +32,12 @@ export interface StationContextValue {
 type Action =
   | { type: 'SET_STATIONS'; payload: Station[] }
   | { type: 'CLEAR_STATIONS' }
-  | { type: 'TOGGLE_DRAW_STATE'; payload: boolean };
+  | { type: 'TOGGLE_DRAW_STATE'; payload: boolean }
+  | { type: 'SET_SURFACE_WATER_STATIONS'; payload: Station[] };
 
 const initialState: State = {
   stations: [],
+  surfaceWaterStations: [],
   drawState: false,
 };
 
@@ -46,6 +49,8 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, stations: [] };
     case 'TOGGLE_DRAW_STATE':
       return { ...state, drawState: action.payload };
+    case 'SET_SURFACE_WATER_STATIONS':
+      return { ...state, surfaceWaterStations: action.payload };
     default:
       return state;
   }

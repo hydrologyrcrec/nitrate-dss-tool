@@ -10,6 +10,15 @@ import { apiUrl } from './apiurl'
 import { useStationContext } from '@/app/contexts/StationContext';
 delete (L.Icon.Default.prototype as any)._getIconUrl
 
+const redIcon = new L.Icon({
+  iconUrl: '/leaflet/images/marker-icon-red.png',
+  shadowUrl: '/leaflet/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
   iconUrl: '/leaflet/images/marker-icon.png',
@@ -54,10 +63,16 @@ export default function Map() {
       const latlngs = layer.getLatLngs()[0];
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
-      const data = response.data;
-      dispatch({ type: 'SET_STATIONS', payload: data });
-      data.forEach((station: any) => {
+      const { ground_water, surface_water } = response.data;
+      dispatch({ type: 'SET_STATIONS', payload: ground_water });
+      dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
+      ground_water.forEach((station: any) => {
         L.marker([station.lat, station.lng])
+          .addTo(mapRef.current!)
+          .bindPopup(`<b>${station.name}</b>`);
+      });
+      surface_water.forEach((station: any) => {
+        L.marker([station.lat, station.lng], { icon: redIcon })
           .addTo(mapRef.current!)
           .bindPopup(`<b>${station.name}</b>`);
       });

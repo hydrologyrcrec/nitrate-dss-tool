@@ -36,7 +36,9 @@ def get_stations():
 
     try:
         cursor = conn.cursor()
-        query = """
+
+        # Query for groundwater stations
+        gw_query = """
         SELECT s.station_id, s.station_name,
                ST_X(s.station_location::geometry),
                ST_Y(s.station_location::geometry),
@@ -48,14 +50,14 @@ def get_stations():
             ST_GeomFromText(%s, 4326)
         );
         """
-        cursor.execute(query, (polygon_wkt,))
-        rows = cursor.fetchall()
+        cursor.execute(gw_query, (polygon_wkt,))
+        gw_rows = cursor.fetchall()
 
-        station_map = {}
-        for row in rows:
+        groundwater_stations = {}
+        for row in gw_rows:
             station_id = str(row['station_id']) 
-            if station_id not in station_map:
-                station_map[station_id] = {
+            if station_id not in groundwater_stations:
+                groundwater_stations[station_id] = {
                     "id": station_id,
                     "name": row['station_name'],
                     "lng": row['st_x'],
@@ -64,18 +66,56 @@ def get_stations():
                 }
 
             if row['link_label']:
-                station_map[station_id]["links"].append({
+                groundwater_stations[station_id]["links"].append({
                     "label": row['link_label'],
                     "url": row['link_url'],
                     "type": row['data_type']
                 })
 
-        return jsonify(list(station_map.values()))
-    
+        # Query for surface water stations
+        sw_query = """
+        SELECT sw.station_id, sw.station_name,
+               ST_X(sw.station_location::geometry),
+               ST_Y(sw.station_location::geometry),
+               swl.link_label, swl.link_url, swl.data_type
+        FROM surface_water_stations sw
+        LEFT JOIN sw_data_links swl ON sw.station_id = swl.station_id
+        WHERE ST_Within(
+            sw.station_location::geometry,
+            ST_GeomFromText(%s, 4326)
+        );
+        """
+        cursor.execute(sw_query, (polygon_wkt,))
+        sw_rows = cursor.fetchall()
+
+        surface_water_stations = {}
+        for row in sw_rows:
+            station_id = str(row['station_id']) 
+            if station_id not in surface_water_stations:
+                surface_water_stations[station_id] = {
+                    "id": station_id,
+                    "name": row['station_name'],
+                    "lng": row['st_x'],
+                    "lat": row['st_y'],
+                    "links": []
+                }
+
+            if row['link_label']:
+                surface_water_stations[station_id]["links"].append({
+                    "label": row['link_label'],
+                    "url": row['link_url'],
+                    "type": row['data_type']
+                })
+
+        return jsonify({
+            "ground_water": list(groundwater_stations.values()),
+            "surface_water": list(surface_water_stations.values())
+        })
+
     except Exception as e:
         print("Query failed:", e)
         return jsonify({"error": "Query execution failed"}), 500
-    
+
     finally:
         cursor.close()
         conn.close()

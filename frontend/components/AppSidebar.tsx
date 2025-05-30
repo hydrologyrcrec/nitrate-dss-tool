@@ -15,6 +15,7 @@ import {
 } from "@radix-ui/react-collapsible";
 import { ChevronDown, View, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined, Package } from "lucide-react";
 import StationList from './StationList';
+import SWStationList from "./SwStationList";
 
 export function AppSidebar() {
     return (
@@ -67,13 +68,13 @@ export function AppSidebar() {
                                             <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
-                                        <CollapsibleContent>
-                                            <span className="text-sm text-gray-500 p-2">Coming Soon</span> 
+                                        <CollapsibleContent className='max-h-screen overflow-scroll'>
+                                           <SWStationList />
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                    <Collapsible defaultOpen>
+                                    <Collapsible>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">Data</p></span>

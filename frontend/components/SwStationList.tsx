@@ -2,20 +2,20 @@
 
 import { useStationContext } from '@/app/contexts/StationContext';
 
-export default function StationList() {
+export default function SWStationList() {
   const { state } = useStationContext();
 
   if (!state.stations.length) {
     return (
       <p className="text-sm text-gray-500 p-2">
-        No data found. Draw a polygon to fetch Data.
+        No Results Found. Draw a polygon to View Results.
       </p>
     );
   }
 
   return (
     <ul id="station-items">
-      {state.stations.map((station) => (
+      {state.surfaceWaterStations.map((station) => (
         <li key={station.id}>
           <strong>{station.name}</strong>
           {Array.isArray(station.links) && station.links.length > 0 ? (
@@ -33,7 +33,7 @@ export default function StationList() {
             </ul>
           ) : (
             <p style={{ fontSize: '0.9rem', color: '#777' }}>
-              Data Link Unavailable.
+              Results Link Unavailable.
             </p>
           )}
         </li>
