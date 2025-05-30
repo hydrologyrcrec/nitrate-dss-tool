@@ -7,7 +7,7 @@ import 'leaflet-draw'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import { apiUrl } from './apiurl'
-import { StationListRefContext } from '@/app/contexts/StationListContext';
+import { useStationContext } from '@/app/contexts/StationContext';
 delete (L.Icon.Default.prototype as any)._getIconUrl
 
 L.Icon.Default.mergeOptions({
@@ -19,12 +19,11 @@ L.Icon.Default.mergeOptions({
 export default function Map() {
   const mapRef = useRef<L.Map | null>(null)
   const drawnItemsRef = useRef<L.FeatureGroup>(new L.FeatureGroup())
-  const stationListRef = useContext(StationListRefContext);
+  const { state, dispatch } = useStationContext();
 
   useEffect(() => {
     if (mapRef.current) return;
   
-    // Initialize map
     mapRef.current = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -54,32 +53,16 @@ export default function Map() {
       drawnItemsRef.current.addLayer(layer);
       const latlngs = layer.getLatLngs()[0];
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
-  
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
       const data = response.data;
-      const list = stationListRef?.current;
-  
-      if (list) list.innerHTML = '';
-  
+      dispatch({ type: 'SET_STATIONS', payload: data });
       data.forEach((station: any) => {
         L.marker([station.lat, station.lng])
           .addTo(mapRef.current!)
           .bindPopup(`<b>${station.name}</b>`);
-  
-        const li = document.createElement('li');
-        const linksHTML = Array.isArray(station.links) && station.links.length > 0
-          ? `<ul>${station.links.map(
-              (link: any) =>
-                `<li><a href="${link.url}" target="_blank">${link.label}</a> <span style='color:#666;font-size:0.85rem;'>(${link.type})</span></li>`
-            ).join('')}</ul>`
-          : `<p style='font-size: 0.9rem; color: #777;'>No data links available.</p>`;
-  
-        li.innerHTML = `<strong>${station.name}</strong>${linksHTML}`;
-        list?.appendChild(li);
       });
     });
   }, []);
   
-
   return <div id="map" className='h-full w-full'></div>
 }

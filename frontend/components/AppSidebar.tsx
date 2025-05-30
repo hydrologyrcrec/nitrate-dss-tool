@@ -1,6 +1,4 @@
   "use client";
-import { useContext } from 'react';
-import { StationListRefContext } from '@/app/contexts/StationListContext';
 import {
     Sidebar,
     SidebarMenu,
@@ -15,14 +13,14 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, View, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined } from "lucide-react";
+import { ChevronDown, View, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined, Package } from "lucide-react";
+import StationList from './StationList';
 
 export function AppSidebar() {
-    const stationListRef = useContext(StationListRefContext);
     return (
-    <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 overflow-clip">
-      <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0">
-        <SidebarMenu className="pt-4">
+    <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[100vh] overflow-scroll bg-white">
+      <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white">
+        <SidebarMenu className="pt-4 bg-white overflow-scroll h-screen">
             <Collapsible defaultOpen className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
@@ -57,7 +55,7 @@ export function AppSidebar() {
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
                                         <CollapsibleContent>
-                                            <span className="text-sm">Coming Soon</span> 
+                                            <span className="text-sm text-gray-500 p-2">Coming Soon</span> 
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
@@ -70,7 +68,7 @@ export function AppSidebar() {
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
                                         <CollapsibleContent>
-                                            <span className="text-sm">Coming Soon</span> 
+                                            <span className="text-sm text-gray-500 p-2">Coming Soon</span> 
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
@@ -83,7 +81,7 @@ export function AppSidebar() {
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
                                         <CollapsibleContent className='max-h-screen overflow-scroll'>
-                                            <ul id="station-items" ref={stationListRef}></ul>
+                                           <StationList />
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
@@ -96,28 +94,28 @@ export function AppSidebar() {
             </Collapsible>
 
             {/* NEW SECTION: BMP MODELING STUDY */}
-            <Collapsible defaultOpen>
-              <SidebarMenuItem>
+            <Collapsible defaultOpen className='mb-48'>
+              <SidebarMenuItem className='overflow-scroll'>
                 <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                   <span className="flex items-center justify-center gap-2">
-                    <Map className="h-4 w-4" />
+                    <Package className="h-4 w-4" />
                     BMP Modeling Study
                   </span>
                   <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                 </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
+                <CollapsibleContent className='overflow-scroll'>
+                  <SidebarMenuSub className='overflow-scroll'>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton>Study Area</SidebarMenuSubButton>
+                      <SidebarMenuSubButton className='font-semibold text-sm'>Study Area</SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton>Wells</SidebarMenuSubButton>
+                      <SidebarMenuSubButton className='font-semibold text-sm'>Wells</SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton>Maps</SidebarMenuSubButton>
+                      <SidebarMenuSubButton className='font-semibold text-sm'>Maps</SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton>Model Setup</SidebarMenuSubButton>
+                      <SidebarMenuSubButton className='font-semibold text-sm'>Model Setup</SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   </SidebarMenuSub>
                 </CollapsibleContent>
