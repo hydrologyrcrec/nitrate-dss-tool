@@ -22,7 +22,7 @@ export function AppSidebar() {
     <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[100vh] overflow-scroll bg-white">
       <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white">
         <SidebarMenu className="pt-4 bg-white overflow-scroll h-screen">
-            <Collapsible defaultOpen className="group/collapsible">
+            <Collapsible className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                     <span className="flex items-center justify-center gap-2"><Map className="h-4 w-4" />Food Susceptibility Mapping</span>
