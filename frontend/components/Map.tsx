@@ -29,6 +29,7 @@ export default function Map() {
   const mapRef = useRef<L.Map | null>(null)
   const drawnItemsRef = useRef<L.FeatureGroup>(new L.FeatureGroup())
   const { state, dispatch } = useStationContext();
+  const markersRef = useRef<L.Marker[]>([]);
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -58,6 +59,8 @@ export default function Map() {
   
     mapRef.current.on('draw:created', async (e: any) => {
       drawnItemsRef.current.clearLayers();
+      markersRef.current.forEach((marker) => mapRef.current!.removeLayer(marker));
+      markersRef.current = [];
       const layer = e.layer;
       drawnItemsRef.current.addLayer(layer);
       const latlngs = layer.getLatLngs()[0];
@@ -67,14 +70,16 @@ export default function Map() {
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
       ground_water.forEach((station: any) => {
-        L.marker([station.lat, station.lng])
+        const marker = L.marker([station.lat, station.lng])
           .addTo(mapRef.current!)
           .bindPopup(`<b>${station.name}</b>`);
+        markersRef.current.push(marker);
       });
       surface_water.forEach((station: any) => {
-        L.marker([station.lat, station.lng], { icon: redIcon })
+        const marker = L.marker([station.lat, station.lng], { icon: redIcon })
           .addTo(mapRef.current!)
           .bindPopup(`<b>${station.name}</b>`);
+        markersRef.current.push(marker);
       });
     });
   }, []);
