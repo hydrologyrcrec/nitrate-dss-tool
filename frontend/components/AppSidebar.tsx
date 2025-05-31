@@ -38,7 +38,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
             </Collapsible>
 
-            <Collapsible defaultOpen>
+            <Collapsible className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                     <span className="flex items-center justify-center gap-2"><Wrench className="h-4 w-4" /> Surface & Ground Water</span>
@@ -48,7 +48,7 @@ export function AppSidebar() {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuSub>
-                                    <Collapsible>
+                                    <Collapsible className="group/collapsible">
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Prediction Results</p></span>
@@ -61,7 +61,7 @@ export function AppSidebar() {
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                    <Collapsible>
+                                    <Collapsible className="group/collapsible">
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">AI Prediction Data</p></span>
@@ -82,7 +82,7 @@ export function AppSidebar() {
             </Collapsible>
 
             {/* NEW SECTION: BMP MODELING STUDY */}
-            <Collapsible defaultOpen className='mb-48'>
+            <Collapsible className='mb-48 group/collapsible'>
               <SidebarMenuItem className='overflow-scroll'>
                 <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                   <span className="flex items-center justify-center gap-2">
