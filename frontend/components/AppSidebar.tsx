@@ -1,4 +1,5 @@
-  "use client";
+"use client";
+
 import {
     Sidebar,
     SidebarMenu,
@@ -13,11 +14,13 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined, Package } from "lucide-react";
+import { ChevronDown, Wrench, TrendingUpDown, Database, Map, ChartNoAxesCombined, Package, Waves } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
+import { useStationContext } from "@/app/contexts/StationContext";
 
 export function AppSidebar() {
+    const { state, dispatch } = useStationContext();
     return (
     <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[100vh] overflow-scroll bg-white">
       <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white">
@@ -38,17 +41,17 @@ export function AppSidebar() {
                 </SidebarMenuItem>
             </Collapsible>
 
-            <Collapsible className="group/collapsible">
+            <Collapsible className="group/collapsible" open={state.drawState} onOpenChange={() => dispatch({ type: "TOGGLE_DRAW_STATE", payload: !state.drawState })}>
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                    <span className="flex items-center justify-center gap-2"><Wrench className="h-4 w-4" /> Surface & Ground Water</span>
+                    <span className="flex items-center justify-center gap-2"><Waves className="h-4 w-4" /> Surface & Ground Water</span>
                         <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuSub>
-                                    <Collapsible className="group/collapsible">
+                                    <Collapsible className="group/collapsible" open={state.dataDisplayState}  onOpenChange={(open) => dispatch({ type: "TOGGLE_DATA_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Prediction Results</p></span>
@@ -61,7 +64,7 @@ export function AppSidebar() {
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                    <Collapsible className="group/collapsible">
+                                    <Collapsible className="group/collapsible" open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">AI Prediction Data</p></span>

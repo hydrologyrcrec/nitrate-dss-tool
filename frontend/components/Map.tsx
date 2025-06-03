@@ -58,6 +58,7 @@ export default function Map() {
     mapRef.current.addControl(drawControl);
   
     mapRef.current.on('draw:created', async (e: any) => {
+      dispatch({ type: 'TOGGLE_DRAW_STATE', payload: false});
       drawnItemsRef.current.clearLayers();
       markersRef.current.forEach((marker) => mapRef.current!.removeLayer(marker));
       markersRef.current = [];
@@ -69,6 +70,9 @@ export default function Map() {
       const { ground_water, surface_water } = response.data;
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
+      dispatch({ type: 'TOGGLE_DRAW_STATE', payload: true});
+      dispatch({ type: 'TOGGLE_DATA_STATE', payload: true});
+      dispatch({ type: 'TOGGLE_RESULTS_STATE', payload: true});
       ground_water.forEach((station: any) => {
         const marker = L.marker([station.lat, station.lng])
           .addTo(mapRef.current!)

@@ -8,7 +8,7 @@ export default function StationList() {
   if (!state.stations.length) {
     return (
       <p className="text-sm text-gray-500 p-2">
-        No data found. Draw a polygon to fetch Data.
+        No data to display. Draw a polygon to view data.
       </p>
     );
   }
@@ -17,7 +17,7 @@ export default function StationList() {
     <ul id="station-items">
       {state.stations.map((station) => (
         <li key={station.id}>
-          <strong>{station.name}</strong>
+         <strong className='flex gap-4 pb-2'><img src="leaflet/images/marker-icon.png" className='h-6 w-4' />{station.name}</strong>
           {Array.isArray(station.links) && station.links.length > 0 ? (
             <ul>
               {station.links.map((link, index) => (

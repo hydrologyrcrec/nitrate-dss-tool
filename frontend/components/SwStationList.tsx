@@ -8,7 +8,7 @@ export default function SWStationList() {
   if (!state.stations.length) {
     return (
       <p className="text-sm text-gray-500 p-2">
-        No Results Found. Draw a polygon to View Results.
+        No results to display. Draw a polygon to view results.
       </p>
     );
   }
@@ -17,7 +17,7 @@ export default function SWStationList() {
     <ul id="station-items">
       {state.surfaceWaterStations.map((station) => (
         <li key={station.id}>
-          <strong>{station.name}</strong>
+          <strong className='flex gap-4 pb-2'><img src="leaflet/images/marker-icon-red.png" className='h-6 w-4' />{station.name}</strong>
           {Array.isArray(station.links) && station.links.length > 0 ? (
             <ul>
               {station.links.map((link, index) => (
