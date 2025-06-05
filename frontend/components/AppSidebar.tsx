@@ -28,7 +28,7 @@ export function AppSidebar() {
             <Collapsible className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                    <span className="flex items-center justify-center gap-2"><Map className="h-4 w-4" />Food Susceptibility Mapping</span>
+                    <span className="flex items-center justify-center gap-2"><Map className="h-4 w-4" />Flood Susceptibility Mapping</span>
                         <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
