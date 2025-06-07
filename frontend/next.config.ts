@@ -7,4 +7,8 @@ const nextConfig: NextConfig = {
   },
 };
 
+module.exports = {
+  transpilePackages: ['leaflet'],
+};
+
 export default nextConfig;

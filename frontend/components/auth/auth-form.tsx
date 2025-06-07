@@ -45,7 +45,7 @@ export function AuthForm({ type }: AuthFormProps) {
         }
         sessionStorage.setItem("email", data.email);
         sessionStorage.setItem("userName", response.data.userName);
-        router.push(`/draw`);
+        router.push(`/dashboard`);
       } else {
         setError(response.data.message);
         console.error("Authentication failed");
