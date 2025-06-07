@@ -1,7 +1,7 @@
 // components/Map.tsx
 'use client'
 
-import { useContext, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet-draw'
 import 'leaflet/dist/leaflet.css'
@@ -86,7 +86,7 @@ export default function Map() {
         markersRef.current.push(marker);
       });
     });
-  }, []);
+  }, [dispatch]);
   
   return <div id="map" className='h-full w-full'></div>
 }
