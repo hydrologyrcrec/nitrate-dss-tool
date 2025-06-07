@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -8,11 +8,10 @@ from auth.routes import auth_bp
 load_dotenv()
 
 app = Flask(__name__)
+
 CORS(app,
      supports_credentials=True,
-     resources={r"/api/*": {"origins": ["http://localhost:3000", os.environ.get("WEBSITE_URL")]}},
-     allow_headers=["Content-Type", "Authorization"],
-     methods=["GET", "POST", "OPTIONS"])
+     resources={r"/*": {"origins": ["http://localhost:3000", os.environ.get("WEBSITE_URL")]}})
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
@@ -79,6 +78,28 @@ def get_stations():
     finally:
         cursor.close()
         conn.close()
+
+@app.route('/geojson/<path:filename>', methods=['GET'])
+def serve_geojson(filename):
+    geojson_folder = os.path.join(os.path.dirname(__file__), 'GeoJSON_GG')
+    file_path = os.path.join(geojson_folder, filename)
+
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+
+    with open(file_path, 'r') as f:
+        content = f.read()
+    return Response(content, mimetype='application/json')
+
+@app.route('/tiffs/<path:filename>', methods=['GET'])
+def serve_tiff(filename):
+    raster_folder = os.path.join(os.path.dirname(__file__), 'Raster_TIFFs')
+    file_path = os.path.join(raster_folder, filename)
+
+    if not os.path.exists(file_path):
+        return jsonify({"error": "Raster file not found"}), 404
+
+    return send_from_directory(raster_folder, filename)
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5008))
