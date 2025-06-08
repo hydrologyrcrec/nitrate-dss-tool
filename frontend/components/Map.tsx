@@ -151,7 +151,7 @@ export default function Map() {
   useEffect(() => {
     if (mapRef.current) return;
   
-    mapRef.current = L.map('map').setView([20, 0], 2);
+    map = mapRef.current = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
     }).addTo(mapRef.current)
