@@ -15,7 +15,7 @@ export default function LeafletMapWithCOG() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy; OpenStreetMap contributors"
       />
-      <COGViewer url="https://fsm-geo-tiff-data.s3.us-east-2.amazonaws.com/Drainage_cog.tif" />
+      <COGViewer url="https://fsm-geo-tiff-data.s3.us-east-2.amazonaws.com/Drainage_cog_v2.tif" />
     </MapContainer>
   );
 }

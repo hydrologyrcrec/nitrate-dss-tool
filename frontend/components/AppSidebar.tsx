@@ -127,7 +127,7 @@ export function AppSidebar() {
                                 <SidebarMenuSub>
                                     <Collapsible className="group/collapsible" open={state.dataDisplayState}  onOpenChange={(open) => dispatch({ type: "TOGGLE_DATA_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
-                                        <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
+                                        <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Prediction Results</p></span>
                                             <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                         </CollapsibleTrigger>
@@ -140,7 +140,7 @@ export function AppSidebar() {
                                     </Collapsible>
                                     <Collapsible className="group/collapsible" open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
-                                        <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
+                                        <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">AI Prediction Data</p></span>
                                             <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                         </CollapsibleTrigger>
