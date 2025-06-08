@@ -68,10 +68,10 @@ export function AppSidebar() {
       const isVisible = updated[filename]
   
       if (filename === 'topography') {
-        const url = 'http://localhost:5008/tiffs/Top1_web.tif'
+        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Top1_web.tif`
         isVisible ? addRasterLayer('topography', url) : removeRasterLayer('topography')
       } else if (filename === 'bedrock') {
-        const url = 'http://localhost:5008/tiffs/Bedrock1_web.tif'
+        const url = '${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Bedrock1_web.tif'
         isVisible ? addRasterLayer('bedrock', url) : removeRasterLayer('bedrock')
       } else if (filename) {
         loadGeoJSON(filename, isVisible)
