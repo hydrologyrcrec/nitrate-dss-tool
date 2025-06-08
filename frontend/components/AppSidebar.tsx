@@ -1,26 +1,99 @@
-"use client";
+'use client'
 
+import { useState } from 'react'
+import { loadGeoJSON, addRasterLayer, removeRasterLayer } from '@/components/Map'
 import {
-    Sidebar,
-    SidebarMenu,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
-    SidebarProvider
-} from "@/components/ui/sidebar";
+  Sidebar,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+} from '@/components/ui/sidebar'
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, Database, Map, ChartNoAxesCombined, Package, Waves } from "lucide-react";
+import { ChevronDown, Database, Map, ChartNoAxesCombined, Package, Waves, Layers } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
 
+const allGeoJSONLayers = {
+  studyArea: [
+    { label: 'Boundary', file: 'boundary.geojson' },
+    { label: 'Buck Island Boundary', file: 'buck_island_boundary.geojson' },
+  ],
+  wells: [
+    { label: 'Pumping', file: 'pumping.geojson' },
+    { label: 'Observation', file: 'observation.geojson' },
+  ],
+  maps: [
+    { label: 'Topography', file: 'topography' }, // Raster
+    { label: 'River', file: 'river.geojson' },
+    { label: 'K', file: 'k.geojson' },
+    { label: 'Bedrock (Raster)', file: 'bedrock' }, // Raster
+    { label: 'Initial Starting Head', file: 'initial_starting_head.geojson' },
+  ],
+  modelSetup: [
+    { label: 'Boundary Condition', file: 'boundary_condition.geojson' },
+    { label: 'GRID', file: 'grid.geojson' },
+    { label: 'Inflow', file: 'inflow.geojson' },
+    { label: 'Outflow', file: 'outflow.geojson' },
+  ],
+  modelResults: [
+    { label: 'Groundwater Elevation - Steady State', file: 'steadystate.geojson' },
+    { label: 'Groundwater Elevation - Transient', file: 'transient.geojson' },
+    { label: 'Water Quality', file: 'water_quality.geojson' },
+  ],
+  scenarios: [
+    { label: 'Existing Condition - Fertilization', file: 'fertpast.geojson' },
+    { label: 'Existing Condition - Irrigation', file: 'irrigation.geojson' },
+    { label: 'Fertilizer Management', file: '' },
+    { label: 'Irrigation Management', file: '' },
+    { label: 'Pasture Management', file: '' },
+  ],
+}
+
 export function AppSidebar() {
     const { state, dispatch } = useStationContext();
+    const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({})
+
+    const toggleLayer = (filename: string) => {
+      const updated = { ...visibleLayers, [filename]: !visibleLayers[filename] }
+      setVisibleLayers(updated)
+  
+      const isVisible = updated[filename]
+  
+      if (filename === 'topography') {
+        const url = 'http://localhost:5008/tiffs/Top1_web.tif'
+        isVisible ? addRasterLayer('topography', url) : removeRasterLayer('topography')
+      } else if (filename === 'bedrock') {
+        const url = 'http://localhost:5008/tiffs/Bedrock1_web.tif'
+        isVisible ? addRasterLayer('bedrock', url) : removeRasterLayer('bedrock')
+      } else if (filename) {
+        loadGeoJSON(filename, isVisible)
+      }
+    }
+  
+    const renderCheckboxes = (group: { label: string; file: string }[]) => (
+      <div className="space-y-1 pl-4 py-1">
+        {group.map(({ label, file }) => (
+          <div key={label} className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={!!visibleLayers[file]}
+              disabled={!file}
+              onChange={() => toggleLayer(file)}
+            />
+            {label}
+          </div>
+        ))}
+      </div>
+    )
+  
     return (
     <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[100vh] overflow-scroll bg-white">
       <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white">
@@ -84,37 +157,40 @@ export function AppSidebar() {
                 </SidebarMenuItem >
             </Collapsible>
 
-            {/* NEW SECTION: BMP MODELING STUDY */}
-            <Collapsible className='mb-48 group/collapsible'>
-              <SidebarMenuItem className='overflow-scroll'>
-                <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                  <span className="flex items-center justify-center gap-2">
-                    <Package className="h-4 w-4" />
-                    BMP Modeling Study
-                  </span>
-                  <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                </CollapsibleTrigger>
-                <CollapsibleContent className='overflow-scroll'>
-                  <SidebarMenuSub className='overflow-scroll'>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton className='font-semibold text-sm'>Study Area</SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton className='font-semibold text-sm'>Wells</SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton className='font-semibold text-sm'>Maps</SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton className='font-semibold text-sm'>Model Setup</SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
 
+          {/* BMP Modeling Study */}
+          <Collapsible defaultOpen>
+            <SidebarMenuItem>
+              <CollapsibleTrigger className="flex justify-between items-center w-full text-lg font-semibold px-2 py-2">
+                <span className="flex items-center gap-2"><Layers className="h-4 w-4" />BMP Modeling Study</span>
+                <ChevronDown className="h-4 w-4" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {[
+                    { title: 'Study Area', data: allGeoJSONLayers.studyArea },
+                    { title: 'Wells', data: allGeoJSONLayers.wells },
+                    { title: 'Maps', data: allGeoJSONLayers.maps },
+                    { title: 'Model Setup', data: allGeoJSONLayers.modelSetup },
+                    { title: 'Model Results', data: allGeoJSONLayers.modelResults },
+                    { title: 'Scenarios', data: allGeoJSONLayers.scenarios },
+                  ].map(({ title, data }) => (
+                    <Collapsible key={title} defaultOpen>
+                      <CollapsibleTrigger className="flex justify-between w-full text-sm px-2 py-2 font-semibold">
+                        {title}
+                        <ChevronDown className="h-4 w-4" />
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        {renderCheckboxes(data)}
+                      </CollapsibleContent>
+                    </Collapsible>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
         </SidebarMenu>
       </Sidebar>
     </SidebarProvider>
-    );
+  )
 }

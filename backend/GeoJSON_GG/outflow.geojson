@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "outflow",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "OBJECTID": 3, "FID_Extend": 0, "OID_": 0, "Name": "Extended Boundary", "FolderPath": "Extended Boundary.kml", "SymbolID": 0, "AltMode": 0, "Base": 0.0, "Clamped": -1, "Extruded": 0, "Snippet": null, "PopupInfo": null, "Shape_Leng": 1.06589031898, "Shape_Le_1": 24614.4793532 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -80.973710485068395, 27.062023100039418, 0.0 ], [ -81.011164927676077, 27.016722789894548, 0.0 ], [ -81.027908637770153, 27.012123994511828, 0.0 ], [ -81.06943119573269, 26.999204932703375, 0.0 ], [ -81.086582860075268, 26.980612442142665, 0.0 ], [ -81.105421715732987, 26.975686589916744, 0.0 ], [ -81.127070248999445, 26.965482233618872, 0.0 ], [ -81.151810678993101, 26.966467890947477, 0.0 ], [ -81.173754935581101, 26.970241917830677, 0.0 ], [ -81.178640613430275, 26.972612151364196, 0.0 ] ] ] } }
+]
+}
