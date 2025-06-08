@@ -16,10 +16,11 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, Database, Map, ChartNoAxesCombined, Package, Waves, Layers } from "lucide-react";
+import { ChevronDown, Database, Map, ChartNoAxesCombined, Package, BrickWall, Waves, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
+import { icon } from 'leaflet';
 
 const allGeoJSONLayers = {
   studyArea: [
@@ -101,7 +102,7 @@ export function AppSidebar() {
             <Collapsible className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                    <span className="flex items-center justify-center gap-2"><Map className="h-4 w-4" />Flood Susceptibility Mapping</span>
+                    <span className="flex items-center justify-center gap-2"><MapPinned className="h-4 w-4" />Flood Susceptibility Mapping</span>
                         <ChevronDown className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -168,16 +169,16 @@ export function AppSidebar() {
               <CollapsibleContent className='mb-20'>
                 <SidebarMenuSub>
                   {[
-                    { title: 'Study Area', data: allGeoJSONLayers.studyArea },
-                    { title: 'Wells', data: allGeoJSONLayers.wells },
-                    { title: 'Maps', data: allGeoJSONLayers.maps },
-                    { title: 'Model Setup', data: allGeoJSONLayers.modelSetup },
-                    { title: 'Model Results', data: allGeoJSONLayers.modelResults },
-                    { title: 'Scenarios', data: allGeoJSONLayers.scenarios },
-                  ].map(({ title, data }) => (
-                    <Collapsible key={title} defaultOpen>
+                    { title: 'Study Area', data: allGeoJSONLayers.studyArea, icon: <PenLine className="h-4 w-4"/> },
+                    { title: 'Wells', data: allGeoJSONLayers.wells, icon: <BrickWall className="h-4 w-4"/>},
+                    { title: 'Maps', data: allGeoJSONLayers.maps, icon: <Map className="h-4 w-4"/> },
+                    { title: 'Model Setup', data: allGeoJSONLayers.modelSetup, icon: <Package className="h-4 w-4"/>},
+                    { title: 'Model Results', data: allGeoJSONLayers.modelResults, icon: <Sparkle className="h-4 w-4"/>},
+                    { title: 'Scenarios', data: allGeoJSONLayers.scenarios, icon: <LoaderPinwheel className="h-4 w-4"/>},
+                  ].map(({ title, data, icon }) => (
+                    <Collapsible key={title}>
                       <CollapsibleTrigger className="flex justify-between w-full text-sm px-2 py-2 font-semibold">
-                        {title}
+                        <span className="flex items-center justify-center gap-2">{icon}<p className="text-sm">{title}</p></span>
                         <ChevronDown className="h-4 w-4" />
                       </CollapsibleTrigger>
                       <CollapsibleContent>
