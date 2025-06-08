@@ -49,7 +49,7 @@ export function loadGeoJSON(filename: string, visible: boolean) {
     return
   }
 
-  fetch(`http://localhost:5008/geojson/${filename}`)
+  fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/geojson/${filename}`)
     .then((res) => {
       const contentType = res.headers.get('content-type') || ''
       if (contentType.includes('application/json')) {
