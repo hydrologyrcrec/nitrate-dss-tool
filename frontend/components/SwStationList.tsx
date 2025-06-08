@@ -18,7 +18,7 @@ export default function SWStationList() {
     <ul id="station-items">
       {state.surfaceWaterStations.map((station) => (
         <li key={station.id}>
-          <strong className='flex gap-4 pb-2'><Image src="leaflet/images/marker-icon-red.png" alt='red-marker' className='h-6 w-4' />{station.name}</strong>
+          <strong className='flex gap-4 pb-2'><Image src="/leaflet/images/marker-icon-red.png" alt='red-marker' className='h-6 w-4' />{station.name}</strong>
           {Array.isArray(station.links) && station.links.length > 0 ? (
             <ul>
               {station.links.map((link, index) => (
