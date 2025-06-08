@@ -159,13 +159,13 @@ export function AppSidebar() {
 
 
           {/* BMP Modeling Study */}
-          <Collapsible defaultOpen>
+          <Collapsible>
             <SidebarMenuItem>
               <CollapsibleTrigger className="flex justify-between items-center w-full text-lg font-semibold px-2 py-2">
                 <span className="flex items-center gap-2"><Layers className="h-4 w-4" />BMP Modeling Study</span>
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
-              <CollapsibleContent>
+              <CollapsibleContent className='mb-20'>
                 <SidebarMenuSub>
                   {[
                     { title: 'Study Area', data: allGeoJSONLayers.studyArea },
