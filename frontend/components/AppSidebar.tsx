@@ -16,7 +16,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, Waves, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye } from "lucide-react";
+import { ChevronDown, ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
@@ -137,7 +137,7 @@ export function AppSidebar() {
     );    
   
     return (
-    <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[100vh] overflow-scroll bg-white">
+    <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[200vh] overflow-scroll bg-white">
         {visibleTiff && (
           <div className="w-full h-screen fixed top-[60px] left-0 z-10">
             <LeafletMapWithCOG file={visibleTiff} />
@@ -155,11 +155,11 @@ export function AppSidebar() {
                         <SidebarMenu>
                           <SidebarMenuItem>
                             <SidebarMenuSub>
-                                <Collapsible className="group/collapsible">
+                                <Collapsible className="group">
                                   <SidebarMenuSubItem>
                                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
                                         <span className="flex items-center justify-center gap-2"><Eye className="h-4 w-4" /><p className="text-sm">View</p></span>
-                                        <ChevronDown className="h-4 w-4 ml-2" />
+                                        <ChevronUp className="h-4 w-4 ml-2 transition-transform group-data-[state=open]:rotate-180" />
                                     </CollapsibleTrigger>
                                     <SidebarMenuSub>
                                     <CollapsibleContent className='max-h-screen overflow-scroll pt-2'>
@@ -175,45 +175,81 @@ export function AppSidebar() {
                 </SidebarMenuItem>
             </Collapsible>
 
-            <Collapsible className="group/collapsible" open={state.drawState} onOpenChange={() => dispatch({ type: "TOGGLE_DRAW_STATE", payload: !state.drawState })}>
+            <Collapsible className="group/collapsible" open={state.aiToolToggle} onOpenChange={() => dispatch({ type: "TOGGLE_AI_TOOL", payload: !state.aiToolToggle })}>
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                    <span className="flex items-center justify-center gap-2"><Waves className="h-4 w-4" /> Surface & Ground Water</span>
+                    <span className="flex items-center justify-center gap-2"><Wrench className="h-4 w-4" /> AI Prediction Tool </span>
                         <ChevronUp className="h-4 w-4 ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuSub>
-                                    <Collapsible className="group/collapsible" open={state.dataDisplayState}  onOpenChange={(open) => dispatch({ type: "TOGGLE_DATA_STATE", payload: open })}>
-                                        <SidebarMenuSubItem>
+                      <SidebarMenu>
+                        <SidebarMenuSub>
+                        <Collapsible className="group" open={state.drawState} onOpenChange={() => dispatch({ type: "TOGGLE_DRAW_STATE", payload: !state.drawState })}>
+                            <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
+                                <span className="flex items-center justify-center gap-2"><LandPlot className="h-4 w-4" /><span className='flex flex-col justify-center items-start'><p className="text-sm">Surface Water Discharge / </p><p className='text-sm'>Ground Water Level</p></span></span>
+                                <ChevronUp className="h-4 w-4 ml-2 transition-transform group-data-[state=open]:rotate-180" />
+                            </CollapsibleTrigger>
+                            <SidebarMenuSub>
+                            <CollapsibleContent className='max-h-screen overflow-scroll'>
+                                  <SidebarMenu>
+                                    <Collapsible className='group' open={state.dataDisplayState}  onOpenChange={(open) => dispatch({ type: "TOGGLE_DATA_STATE", payload: open })}>
+                                        <SidebarMenuSubItem >
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                                            <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Prediction Results</p></span>
-                                            <ChevronDown className="h-4 w-4 ml-2" />
+                                            <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">Florida Stations (Data)</p></span>
+                                            <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.dataDisplayState? "open" : "close"}]:rotate-180`}/>
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
                                         <CollapsibleContent className='max-h-screen overflow-scroll'>
-                                           <SWStationList />
+                                          <StationList />
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                    <Collapsible className="group/collapsible" open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
+                                    <Collapsible className='group' open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
-                                            <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">AI Prediction Data</p></span>
-                                            <ChevronDown className="h-4 w-4 ml-2" />
+                                            <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Model (Results)</p></span>
+                                            <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.resultsDisplayState? "open" : "close"}]:rotate-180`}/>
                                         </CollapsibleTrigger>
-                                        <SidebarMenuSub>
                                         <CollapsibleContent className='max-h-screen overflow-scroll'>
-                                           <StationList />
-                                        </CollapsibleContent>
+
+                                        <SidebarMenuSub>
+                                          <Collapsible className='group'>
+                                              <SidebarMenuSubItem >
+                                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
+                                                  <span className="flex items-center justify-center gap-2"><p className="text-sm">1. NBEATS Model (SW)</p></span>
+                                                  <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=close}]:rotate-180`}/>
+                                              </CollapsibleTrigger>
+                                              <SidebarMenuSub>
+                                              <CollapsibleContent className='max-h-screen overflow-scroll'>
+                                                <SWStationList />
+                                              </CollapsibleContent>
+                                              </SidebarMenuSub>
+                                              </SidebarMenuSubItem>
+                                          </Collapsible>
+                                          <Collapsible className='group'>
+                                              <SidebarMenuSubItem>
+                                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
+                                                  <span className="flex items-center justify-center gap-2"><p className="text-sm">2. NHITS Model (GW)</p></span>
+                                                  <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=close]:rotate-180`}/>
+                                              </CollapsibleTrigger>
+                                              <SidebarMenuSub>
+                                              <CollapsibleContent className='max-h-screen overflow-scroll'>
+                                              <p className='text-sm pt-2'>Coming Soon</p>
+                                              </CollapsibleContent>
+                                              </SidebarMenuSub>
+                                              </SidebarMenuSubItem>
+                                          </Collapsible>
                                         </SidebarMenuSub>
+                                        </CollapsibleContent>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                </SidebarMenuSub>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
+                                  </SidebarMenu>
+                            </CollapsibleContent>
+                            </SidebarMenuSub>
+                        </Collapsible>
+                        </SidebarMenuSub>
+                      </SidebarMenu>
                     </CollapsibleContent>
                 </SidebarMenuItem >
             </Collapsible>
@@ -231,10 +267,10 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                       <SidebarMenuSub>
                         {bmpHeaders.map(({ title, data, icon }) => (
-                          <Collapsible key={title}>
+                          <Collapsible key={title} className='group'>
                             <CollapsibleTrigger className="flex justify-between w-full text-sm px-2 py-2 font-semibold">
                               <span className="flex items-center justify-center gap-2">{icon}<p className="text-sm">{title}</p></span>
-                              <ChevronDown className="h-4 w-4" />
+                              <ChevronUp className="h-4 w-4 ml-2 transition-transform group-data-[state=open]:rotate-180" />
                             </CollapsibleTrigger>
                             <SidebarMenuSub>
                             <CollapsibleContent>

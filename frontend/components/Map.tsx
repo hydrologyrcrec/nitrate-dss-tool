@@ -34,7 +34,6 @@ L.Icon.Default.mergeOptions({
 let map: L.Map | null = null
 let geoLayers: Record<string, L.GeoJSON> = {}
 let rasterLayers: Record<string, any> = {}
-let markerClusterGroup: L.MarkerClusterGroup | null = null
 
 export function loadGeoJSON(filename: string, visible: boolean) {
   if (!map) return
@@ -183,6 +182,7 @@ export default function Map() {
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
       const { ground_water, surface_water } = response.data;
+      dispatch({ type: 'TOGGLE_AI_TOOL', payload: true})
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
       dispatch({ type: 'TOGGLE_DRAW_STATE', payload: true});
@@ -191,13 +191,15 @@ export default function Map() {
       ground_water.forEach((station: any) => {
         const marker = L.marker([station.lat, station.lng])
           .addTo(mapRef.current!)
-          .bindPopup(`<b>${station.name}</b>`);
+          .bindPopup(`<b>${station.name}</b>
+            <a href=${station.links[0].url} target="_blank" rel="noopener noreferrer"><p><u>View Data</u></p></a>`);
         markersRef.current.push(marker);
       });
       surface_water.forEach((station: any) => {
         const marker = L.marker([station.lat, station.lng], { icon: redIcon })
           .addTo(mapRef.current!)
-          .bindPopup(`<b>${station.name}</b>`);
+          .bindPopup(`<b>${station.name}</b>
+            <a href=${station.links[0].url} target="_blank" rel="noopener noreferrer"><p><u>View Results</u></p></a>`);
         markersRef.current.push(marker);
       });
     });

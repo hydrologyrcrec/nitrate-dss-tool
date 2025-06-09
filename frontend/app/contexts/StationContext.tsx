@@ -20,6 +20,7 @@ export interface Station {
 export interface State {
     stations: Station[];
     surfaceWaterStations: Station[];
+    aiToolToggle: boolean;
     drawState: boolean;
     dataDisplayState: boolean;
     resultsDisplayState: boolean;
@@ -37,11 +38,13 @@ type Action =
   | { type: 'TOGGLE_DRAW_STATE'; payload: boolean }
   | { type: 'SET_SURFACE_WATER_STATIONS'; payload: Station[] }
   | { type: 'TOGGLE_DATA_STATE'; payload: boolean }
-  | { type: 'TOGGLE_RESULTS_STATE'; payload: boolean };
+  | { type: 'TOGGLE_RESULTS_STATE'; payload: boolean }
+  | { type: 'TOGGLE_AI_TOOL'; payload: boolean };
 
 const initialState: State = {
   stations: [],
   surfaceWaterStations: [],
+  aiToolToggle: false,
   drawState: false,
   dataDisplayState: false,
   resultsDisplayState: false
@@ -53,6 +56,8 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, stations: action.payload };
     case 'CLEAR_STATIONS':
       return { ...state, stations: [] };
+    case 'TOGGLE_AI_TOOL':
+      return { ...state, aiToolToggle: action.payload };
     case 'TOGGLE_DRAW_STATE':
       return { ...state, drawState: action.payload };
     case 'TOGGLE_DATA_STATE':
