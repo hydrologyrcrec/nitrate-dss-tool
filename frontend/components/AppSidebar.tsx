@@ -7,7 +7,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarProvider,
 } from '@/components/ui/sidebar'
@@ -16,7 +15,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronDown, ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench } from "lucide-react";
+import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
@@ -143,8 +142,8 @@ export function AppSidebar() {
             <LeafletMapWithCOG file={visibleTiff} />
           </div>
         )}
-      <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white">
-        <SidebarMenu className="pt-4 bg-white overflow-scroll h-screen">
+      <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white pb-18">
+        <SidebarMenu className="pt-4 bg-white overflow-scroll h-[100vh]">
             <Collapsible className="group/collapsible">
                 <SidebarMenuItem >
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
@@ -199,13 +198,13 @@ export function AppSidebar() {
                                             <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.dataDisplayState? "open" : "close"}]:rotate-180`}/>
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
-                                        <CollapsibleContent className='max-h-screen overflow-scroll'>
+                                        <CollapsibleContent className='h-[50vh] overflow-scroll'>
                                           <StationList />
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                    <Collapsible className='group' open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
+                                    <Collapsible className='group' open={state.resultsParentDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_PARENT_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Model (Results)</p></span>
@@ -214,14 +213,14 @@ export function AppSidebar() {
                                         <CollapsibleContent className='max-h-screen overflow-scroll'>
 
                                         <SidebarMenuSub>
-                                          <Collapsible className='group'>
+                                          <Collapsible className='group-1' open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
                                               <SidebarMenuSubItem >
-                                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
+                                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                                   <span className="flex items-center justify-center gap-2"><p className="text-sm">1. NBEATS Model (SW)</p></span>
                                                   <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=close}]:rotate-180`}/>
                                               </CollapsibleTrigger>
                                               <SidebarMenuSub>
-                                              <CollapsibleContent className='max-h-screen overflow-scroll'>
+                                              <CollapsibleContent className='h-[50vh] overflow-scroll'>
                                                 <SWStationList />
                                               </CollapsibleContent>
                                               </SidebarMenuSub>
@@ -229,13 +228,13 @@ export function AppSidebar() {
                                           </Collapsible>
                                           <Collapsible className='group'>
                                               <SidebarMenuSubItem>
-                                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 pt-2 rounded-md hover:bg-muted/60 transition">
+                                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                                   <span className="flex items-center justify-center gap-2"><p className="text-sm">2. NHITS Model (GW)</p></span>
                                                   <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=close]:rotate-180`}/>
                                               </CollapsibleTrigger>
                                               <SidebarMenuSub>
                                               <CollapsibleContent className='max-h-screen overflow-scroll'>
-                                              <p className='text-sm pt-2'>Coming Soon</p>
+                                              <p className='text-sm pt-2 text-neutral-500'>Coming Soon</p>
                                               </CollapsibleContent>
                                               </SidebarMenuSub>
                                               </SidebarMenuSubItem>

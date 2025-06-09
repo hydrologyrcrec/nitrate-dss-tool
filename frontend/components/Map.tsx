@@ -182,12 +182,9 @@ export default function Map() {
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
       const { ground_water, surface_water } = response.data;
-      dispatch({ type: 'TOGGLE_AI_TOOL', payload: true})
+      dispatch({ type: 'SET_MULTIPLE_COMP_STATE', payload: {aiToolToggle: true, drawState: true, dataDisplayState: true, resultsParentDisplayState: true, resultsDisplayState: true}});
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
-      dispatch({ type: 'TOGGLE_DRAW_STATE', payload: true});
-      dispatch({ type: 'TOGGLE_DATA_STATE', payload: true});
-      dispatch({ type: 'TOGGLE_RESULTS_STATE', payload: true});
       ground_water.forEach((station: any) => {
         const marker = L.marker([station.lat, station.lng])
           .addTo(mapRef.current!)

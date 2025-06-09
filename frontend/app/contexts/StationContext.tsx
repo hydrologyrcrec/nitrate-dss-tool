@@ -23,6 +23,7 @@ export interface State {
     aiToolToggle: boolean;
     drawState: boolean;
     dataDisplayState: boolean;
+    resultsParentDisplayState: boolean;
     resultsDisplayState: boolean;
   }
 
@@ -30,7 +31,15 @@ export interface StationContextValue {
     state: State;
     dispatch: React.Dispatch<Action>;
     stationListRef: React.RefObject<HTMLUListElement | null>;
-  }  
+  }
+
+export interface SetMultCompStatePayload {
+    aiToolToggle: boolean;
+    drawState: boolean;
+    dataDisplayState: boolean;
+    resultsParentDisplayState: boolean;
+    resultsDisplayState: boolean;
+}
 
 type Action =
   | { type: 'SET_STATIONS'; payload: Station[] }
@@ -38,8 +47,10 @@ type Action =
   | { type: 'TOGGLE_DRAW_STATE'; payload: boolean }
   | { type: 'SET_SURFACE_WATER_STATIONS'; payload: Station[] }
   | { type: 'TOGGLE_DATA_STATE'; payload: boolean }
+  | { type: 'TOGGLE_RESULTS_PARENT_STATE'; payload: boolean }
   | { type: 'TOGGLE_RESULTS_STATE'; payload: boolean }
-  | { type: 'TOGGLE_AI_TOOL'; payload: boolean };
+  | { type: 'TOGGLE_AI_TOOL'; payload: boolean }
+  | { type: 'SET_MULTIPLE_COMP_STATE'; payload: SetMultCompStatePayload };
 
 const initialState: State = {
   stations: [],
@@ -47,6 +58,7 @@ const initialState: State = {
   aiToolToggle: false,
   drawState: false,
   dataDisplayState: false,
+  resultsParentDisplayState: false,
   resultsDisplayState: false
 };
 
@@ -62,10 +74,14 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, drawState: action.payload };
     case 'TOGGLE_DATA_STATE':
       return { ...state, dataDisplayState: action.payload };
+    case 'TOGGLE_RESULTS_PARENT_STATE':
+      return { ...state, resultsParentDisplayState: action.payload };
     case 'TOGGLE_RESULTS_STATE':
       return { ...state, resultsDisplayState: action.payload };
     case 'SET_SURFACE_WATER_STATIONS':
       return { ...state, surfaceWaterStations: action.payload };
+    case 'SET_MULTIPLE_COMP_STATE':
+      return { ...state, ...action.payload };
     default:
       return state;
   }
