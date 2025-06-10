@@ -136,13 +136,13 @@ export function AppSidebar() {
     );    
   
     return (
-    <SidebarProvider className="z-30 fixed top-[60px] right-0 max-w-1/4 h-[200vh] overflow-scroll bg-white">
+    <SidebarProvider className="z-30 fixed top-[60px] right-0 w-[380px] h-[200vh] overflow-scroll bg-white">
         {visibleTiff && (
           <div className="w-full h-screen fixed top-[60px] left-0 z-10">
             <LeafletMapWithCOG file={visibleTiff} />
           </div>
         )}
-      <Sidebar side="right" className="w-1/4 fixed top-[60px] right-0 overflow-scroll bg-white pb-18">
+      <Sidebar side="right" className="w-[380px] fixed top-[60px] right-0 overflow-scroll bg-white pb-18">
         <SidebarMenu className="pt-4 bg-white overflow-scroll h-[100vh]">
             <Collapsible className="group/collapsible">
                 <SidebarMenuItem >
@@ -198,7 +198,7 @@ export function AppSidebar() {
                                             <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.dataDisplayState? "open" : "close"}]:rotate-180`}/>
                                         </CollapsibleTrigger>
                                         <SidebarMenuSub>
-                                        <CollapsibleContent className='h-[50vh] overflow-scroll'>
+                                        <CollapsibleContent className=' max-h-[50vh] h-fit overflow-scroll'>
                                           <StationList />
                                         </CollapsibleContent>
                                         </SidebarMenuSub>
@@ -208,7 +208,7 @@ export function AppSidebar() {
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Model (Results)</p></span>
-                                            <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.resultsDisplayState? "open" : "close"}]:rotate-180`}/>
+                                            <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.resultsParentDisplayState? "open" : "close"}]:rotate-180`}/>
                                         </CollapsibleTrigger>
                                         <CollapsibleContent className='max-h-screen overflow-scroll'>
 
@@ -217,10 +217,10 @@ export function AppSidebar() {
                                               <SidebarMenuSubItem >
                                               <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                                   <span className="flex items-center justify-center gap-2"><p className="text-sm">1. NBEATS Model (SW)</p></span>
-                                                  <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=close}]:rotate-180`}/>
+                                                  <ChevronUp className={`h-4 w-4 ml-2 transition-transform group-data-[state=${state.resultsDisplayState? "open" : "close"}]:rotate-180`}/>
                                               </CollapsibleTrigger>
                                               <SidebarMenuSub>
-                                              <CollapsibleContent className='h-[50vh] overflow-scroll'>
+                                              <CollapsibleContent className='max-h-[50vh] h-fit overflow-scroll'>
                                                 <SWStationList />
                                               </CollapsibleContent>
                                               </SidebarMenuSub>

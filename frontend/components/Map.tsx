@@ -35,7 +35,7 @@ let map: L.Map | null = null
 let geoLayers: Record<string, L.GeoJSON> = {}
 let rasterLayers: Record<string, any> = {}
 
-export function loadGeoJSON(filename: string, visible: boolean) {
+export function loadGeoJSON(filename: string, visible: boolean, color: string = 'blue', weight: number = 2, fill: string = 'circleMarker') {
   if (!map) return
 
   const existingLayer = geoLayers[filename]
@@ -60,8 +60,8 @@ export function loadGeoJSON(filename: string, visible: boolean) {
     .then((geojsonData) => {
       const layer = L.geoJSON(geojsonData, {
         style: {
-          color: 'blue',
-          weight: 2,
+          color: color,
+          weight: weight,
           fillOpacity: 0.2,
         },
         onEachFeature: (feature, layer) => {
@@ -74,7 +74,15 @@ export function loadGeoJSON(filename: string, visible: boolean) {
           }
         },
         pointToLayer: (feature, latlng) =>
-          L.circleMarker(latlng, {
+          fill === 'circle' ?
+          L.circle(latlng, {
+            radius: 5,
+            fillColor: '#007BFF',
+            color: '#fff',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8,
+          }): L.circleMarker(latlng, {
             radius: 5,
             fillColor: '#007BFF',
             color: '#fff',
@@ -182,6 +190,8 @@ export default function Map() {
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
       const { ground_water, surface_water } = response.data;
+      loadGeoJSON('ground_water_wells.json', true, '#2b82cb', 10);
+      loadGeoJSON('surface_water_stations.json', true, '#ca273e', 10);
       dispatch({ type: 'SET_MULTIPLE_COMP_STATE', payload: {aiToolToggle: true, drawState: true, dataDisplayState: true, resultsParentDisplayState: true, resultsDisplayState: true}});
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
