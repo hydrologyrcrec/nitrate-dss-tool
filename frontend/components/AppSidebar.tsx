@@ -20,19 +20,13 @@ import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
 import LeafletMapWithCOG from '@/components/LeafletMapWithCOG';
-// Google Drive links for Excel files
+
+// Google Drive links for Excel files - CLEANED UP
 const excelLinks = {
   calibration: 'https://docs.google.com/spreadsheets/d/175ex1CvdwvZDivJEmDpACAjtiv7vtdti/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
   validation: 'https://docs.google.com/spreadsheets/d/1q9kC2yq43Ny3kaW-aI0KIB-kyNHTSdrj/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
   transient: 'https://docs.google.com/spreadsheets/d/1RS4yEa7PnYqwsS5O_hrACBUn8Xs9K6N4/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
   quality: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc1n: 'https://docs.google.com/spreadsheets/d/1-xhq5k7bPPIDYw1_ltuyIqxT5701r0ZH/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc2n: 'https://docs.google.com/spreadsheets/d/1ww98KfFAweMGHw0nTnP6Zi0F6TzxOYXU/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc3n: 'https://docs.google.com/spreadsheets/d/1uf5_YrRay_6hHpPqBYq1SgjamAxBX5Es/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc4n: 'https://docs.google.com/spreadsheets/d/1eiTXpcdDKGOS6N6Jz5bjoq0RQus0ASIR/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc5n: 'https://docs.google.com/spreadsheets/d/1TQ73-lru8Wi4zG6eKB468TEcrqTK2G7G/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc6n: 'https://docs.google.com/spreadsheets/d/1TxovyjS3azfPJ7OAcPPN_pRlM64nugoT/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-  sc7n: 'https://docs.google.com/spreadsheets/d/1fp6lwCsjNDRAgc40Mld5Vmx88viPxuNt/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
 } as const;
 
 // Type definitions for better type safety
@@ -179,27 +173,49 @@ const allGeoJSONLayers = {
       ]
     },
   ],
-  // Updated Scenarios with nested structure
+  // Updated Scenarios with new structure - YOUR REQUESTED CHANGES
   scenarios: [
     {
       label: 'Existing Condition',
       type: 'parent' as const,
       file: '',
       children: [
-        { label: 'Fertilization', file: 'fertpast.geojson', type: 'geojson' as const },
-        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' as const },
         {
-          label: 'Results',
+          label: 'Fertilization',
           type: 'parent' as const,
           file: '',
           children: [
-            { label: 'SC1-N', file: excelLinks.sc1n, type: 'excel' as const },
-            { label: 'SC2-N', file: excelLinks.sc2n, type: 'excel' as const },
-            { label: 'SC3-N', file: excelLinks.sc3n, type: 'excel' as const },
-            { label: 'SC4-N', file: excelLinks.sc4n, type: 'excel' as const },
-            { label: 'SC5-N', file: excelLinks.sc5n, type: 'excel' as const },
-            { label: 'SC6-N', file: excelLinks.sc6n, type: 'excel' as const },
-            { label: 'SC7-N', file: excelLinks.sc7n, type: 'excel' as const },
+            { label: 'Pasture', file: 'fertpast.geojson', type: 'geojson' as const },
+            { label: 'Nodes', file: 'nodes.geojson', type: 'geojson' as const},
+          ]
+        },
+        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' as const },
+        {
+          label: 'Results (N)',
+          type: 'parent' as const,
+          file: '',
+          children: [
+            { label: 'South Marsh East Lykes', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=349485447#gid=349485447', type: 'excel' as const },
+            { label: 'W6', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=963640838#gid=963640838', type: 'excel' as const },
+            { label: 'South Marsh Center', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=166517616#gid=166517616', type: 'excel' as const },
+            { label: 'South Marsh West', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=1872081315#gid=1872081315', type: 'excel' as const },
+            { label: '770 East', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=561784198#gid=561784198', type: 'excel' as const },
+            { label: 'West Marsh Center', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=568891967#gid=568891967', type: 'excel' as const },
+            { label: 'West Marsh South', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=752529518#gid=752529518', type: 'excel' as const },
+            { label: 'Stargrass Field', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=712630543#gid=712630543', type: 'excel' as const },
+            { label: 'West Marsh North', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=1765172736#gid=1765172736', type: 'excel' as const },
+            { label: 'Tropical West', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=117893368#gid=117893368', type: 'excel' as const },
+            { label: 'Bull Field North', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=2035059955#gid=2035059955', type: 'excel' as const },
+            { label: 'Eucalyptus', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=641990813#gid=641990813', type: 'excel' as const },
+            { label: 'Tropical East South', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=1925285281#gid=1925285281', type: 'excel' as const },
+            { label: 'South Kuhn', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=989782872#gid=989782872', type: 'excel' as const },
+            { label: 'WRP East Marsh North', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=1796455500#gid=1796455500', type: 'excel' as const },
+            { label: 'Shop Field', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=32693183#gid=32693183', type: 'excel' as const },
+            { label: 'East Marsh South', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=1807020016#gid=1807020016', type: 'excel' as const },
+            { label: 'Grove', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=565410006#gid=565410006', type: 'excel' as const },
+            { label: '800 Acres #1', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=656741039#gid=656741039', type: 'excel' as const },
+            { label: 'S5', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=1345317116#gid=1345317116', type: 'excel' as const },
+            { label: 'Ceiling #3', file: 'https://docs.google.com/spreadsheets/d/1mcsevtWNJWn7JdMHo7gjxzOnefCkhNNY/edit?gid=471606032#gid=471606032', type: 'excel' as const },
           ]
         }
       ]
@@ -379,7 +395,7 @@ export function AppSidebar() {
       </div>
     );
 
-    // Render nested structure for Model Results and Scenarios
+    // Render nested structure for Model Results and Scenarios - COMPLETE FUNCTION
     const renderNestedStructure = (group: LayerItem[]) => (
       <div className="space-y-1 pl-4 py-1">
         {group.map((item) => {
@@ -424,7 +440,7 @@ export function AppSidebar() {
                   <CollapsibleContent className="pl-4">
                     {item.children.map((child) => {
                       if (child.type === 'parent' && child.children) {
-                        // Nested parent (like "Results" under "Existing Condition")
+                        // Nested parent (like "Results" under "Existing Condition" or "Nodes" under "Fertilization")
                         return (
                           <Collapsible key={child.label} className="group mt-1">
                             <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
