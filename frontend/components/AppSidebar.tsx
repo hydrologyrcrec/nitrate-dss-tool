@@ -14,17 +14,12 @@ import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "@radix-ui/react-collapsible";
+} from "@/components/ui/collapsible";
 import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench, FileSpreadsheet, Download, MapPin, Droplets } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
-import dynamic from 'next/dynamic';
-
-const LeafletMapWithCOG = dynamic(() => import('@/components/LeafletMapWithCOG'), {
-  ssr: false,
-});
-
+import LeafletMapWithCOG from '@/components/LeafletMapWithCOG';
 // Google Drive links for Excel files
 const excelLinks = {
   calibration: 'https://docs.google.com/spreadsheets/d/175ex1CvdwvZDivJEmDpACAjtiv7vtdti/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
@@ -38,10 +33,21 @@ const excelLinks = {
   sc5n: 'https://docs.google.com/spreadsheets/d/1TQ73-lru8Wi4zG6eKB468TEcrqTK2G7G/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
   sc6n: 'https://docs.google.com/spreadsheets/d/1TxovyjS3azfPJ7OAcPPN_pRlM64nugoT/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
   sc7n: 'https://docs.google.com/spreadsheets/d/1fp6lwCsjNDRAgc40Mld5Vmx88viPxuNt/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
-};
+} as const;
+
+// Type definitions for better type safety
+interface WaterQualityPoint {
+  name: string;
+  viewLink: string;
+  downloadLink: string;
+  description: string;
+  status: string;
+}
+
+type WaterQualityPointKeys = 'SW1' | 'SW2' | 'SW4' | 'SW5' | 'SW6' | 'SW7' | 'SW8' | 'SW9' | 'SW10' | 'Grove';
 
 // Updated Water Quality Data Links - Multi-Sheet Structure
-const waterQualityPointData = {
+const waterQualityPointData: Record<WaterQualityPointKeys, WaterQualityPoint> = {
   'SW1': {
     name: 'SW1',
     viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=80388670',
@@ -114,54 +120,62 @@ const waterQualityPointData = {
   }
 };
 
+interface LayerItem {
+  label: string;
+  file: string;
+  type: 'geojson' | 'raster' | 'excel' | 'parent' | 'waterQuality';
+  children?: LayerItem[];
+}
+
 // Updated data structure with new hierarchy
 const allGeoJSONLayers = {
   studyArea: [
-    { label: 'Boundary', file: 'boundary.geojson', type: 'geojson' },
-    { label: 'Buck Island Boundary', file: 'buck_island_boundary.geojson', type: 'geojson' },
+    { label: 'Boundary', file: 'boundary.geojson', type: 'geojson' as const },
+    { label: 'Buck Island Boundary', file: 'buck_island_boundary.geojson', type: 'geojson' as const },
   ],
   wells: [
-    { label: 'Pumping', file: 'pumping.geojson', type: 'geojson' },
-    { label: 'Observation', file: 'observation.geojson', type: 'geojson' },
-    { label: 'Water Quality', file: 'water_quality.geojson', type: 'geojson' },
+    { label: 'Pumping', file: 'pumping.geojson', type: 'geojson' as const },
+    { label: 'Observation', file: 'observation.geojson', type: 'geojson' as const },
+    { label: 'Water Quality', file: 'water_quality.geojson', type: 'geojson' as const },
   ],
   maps: [
-    { label: 'Topography', file: 'topography', type: 'raster' },
-    { label: 'River', file: 'river.geojson', type: 'geojson' },
-    { label: 'K', file: 'k.geojson', type: 'geojson' },
-    { label: 'Bedrock (Raster)', file: 'bedrock', type: 'raster' },
-    { label: 'Initial Starting Head', file: 'initial_starting_head.geojson', type: 'geojson' },
+    { label: 'Topography', file: 'topography', type: 'raster' as const },
+    { label: 'River', file: 'river.geojson', type: 'geojson' as const },
+    { label: 'K', file: 'k.geojson', type: 'geojson' as const },
+    { label: 'Bedrock (Raster)', file: 'bedrock', type: 'raster' as const },
+    { label: 'Initial Starting Head', file: 'initial_starting_head.geojson', type: 'geojson' as const },
   ],
   modelSetup: [
-    { label: 'Boundary Condition', file: 'boundary_condition.geojson', type: 'geojson' },
-    { label: 'GRID', file: 'grid.geojson', type: 'geojson' },
-    { label: 'Inflow', file: 'inflow.geojson', type: 'geojson' },
-    { label: 'Outflow', file: 'outflow.geojson', type: 'geojson' },
+    { label: 'Boundary Condition', file: 'boundary_condition.geojson', type: 'geojson' as const },
+    { label: 'GRID', file: 'grid.geojson', type: 'geojson' as const },
+    { label: 'Inflow', file: 'inflow.geojson', type: 'geojson' as const },
+    { label: 'Outflow', file: 'outflow.geojson', type: 'geojson' as const },
   ],
   // Updated Model Results with nested structure
   modelResults: [
     {
       label: 'Groundwater Elevation - Steady State',
-      type: 'parent',
+      type: 'parent' as const,
       file: 'steadystate.geojson',
       children: [
-        { label: 'Calibration', file: excelLinks.calibration, type: 'excel' },
-        { label: 'Validation', file: excelLinks.validation, type: 'excel' },
+        { label: 'Calibration', file: excelLinks.calibration, type: 'excel' as const },
+        { label: 'Validation', file: excelLinks.validation, type: 'excel' as const },
       ]
     },
     {
       label: 'Groundwater Elevation - Transient',
-      type: 'parent',
+      type: 'parent' as const,
       file: 'transient.geojson',
       children: [
-        { label: 'Transient', file: excelLinks.transient, type: 'excel' },
+        { label: 'Transient', file: excelLinks.transient, type: 'excel' as const },
       ]
     },
     {
       label: 'Water Quality',
-      type: 'waterQuality', // CHANGED: from 'parent' to 'waterQuality'
+      type: 'waterQuality' as const,
+      file: '',
       children: [
-        { label: 'Quality', file: excelLinks.quality, type: 'excel' },
+        { label: 'Quality', file: excelLinks.quality, type: 'excel' as const },
       ]
     },
   ],
@@ -169,30 +183,32 @@ const allGeoJSONLayers = {
   scenarios: [
     {
       label: 'Existing Condition',
-      type: 'parent',
+      type: 'parent' as const,
+      file: '',
       children: [
-        { label: 'Fertilization', file: 'fertpast.geojson', type: 'geojson' },
-        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' },
+        { label: 'Fertilization', file: 'fertpast.geojson', type: 'geojson' as const },
+        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' as const },
         {
           label: 'Results',
-          type: 'parent',
+          type: 'parent' as const,
+          file: '',
           children: [
-            { label: 'SC1-N', file: excelLinks.sc1n, type: 'excel' },
-            { label: 'SC2-N', file: excelLinks.sc2n, type: 'excel' },
-            { label: 'SC3-N', file: excelLinks.sc3n, type: 'excel' },
-            { label: 'SC4-N', file: excelLinks.sc4n, type: 'excel' },
-            { label: 'SC5-N', file: excelLinks.sc5n, type: 'excel' },
-            { label: 'SC6-N', file: excelLinks.sc6n, type: 'excel' },
-            { label: 'SC7-N', file: excelLinks.sc7n, type: 'excel' },
+            { label: 'SC1-N', file: excelLinks.sc1n, type: 'excel' as const },
+            { label: 'SC2-N', file: excelLinks.sc2n, type: 'excel' as const },
+            { label: 'SC3-N', file: excelLinks.sc3n, type: 'excel' as const },
+            { label: 'SC4-N', file: excelLinks.sc4n, type: 'excel' as const },
+            { label: 'SC5-N', file: excelLinks.sc5n, type: 'excel' as const },
+            { label: 'SC6-N', file: excelLinks.sc6n, type: 'excel' as const },
+            { label: 'SC7-N', file: excelLinks.sc7n, type: 'excel' as const },
           ]
         }
       ]
     },
-    { label: 'Fertilizer Management', file: '', type: 'geojson' },
-    { label: 'Irrigation Management', file: '', type: 'geojson' },
-    { label: 'Pasture Management', file: '', type: 'geojson' },
+    { label: 'Fertilizer Management', file: '', type: 'geojson' as const },
+    { label: 'Irrigation Management', file: '', type: 'geojson' as const },
+    { label: 'Pasture Management', file: '', type: 'geojson' as const },
   ],
-}
+};
 
 const bmpHeaders = [
   { title: 'Study Area', data: allGeoJSONLayers.studyArea, icon: <PenLine className="h-4 w-4"/> },
@@ -201,43 +217,48 @@ const bmpHeaders = [
   { title: 'Model Setup', data: allGeoJSONLayers.modelSetup, icon: <Package className="h-4 w-4"/>},
   { title: 'Model Results', data: allGeoJSONLayers.modelResults, icon: <Sparkle className="h-4 w-4"/>},
   { title: 'Scenarios', data: allGeoJSONLayers.scenarios, icon: <LoaderPinwheel className="h-4 w-4"/>},
-]
+];
 
 const fsmTiffFiles = [
   {label: 'Drainage', file: 'Drainage_cog_v2.tif'},
   {label: 'Flood Inventory', file: 'Flood_inventory_cog_v1.tif'},
-]
+];
 
-interface fsmTF {
+interface FsmTF {
   label: string; 
-  file: string
+  file: string;
 }
 
-interface LayerItem {
-  label: string;
-  file: string;
-  type: 'geojson' | 'raster' | 'excel' | 'parent' | 'waterQuality'; // ADDED: 'waterQuality'
-  children?: LayerItem[];
+// Helper function to check if a string is a valid water quality point key
+const isValidWaterQualityPoint = (point: string): point is WaterQualityPointKeys => {
+  return point in waterQualityPointData;
+};
+
+// Declare global interface for window object
+declare global {
+  interface Window {
+    handleWaterQualityPointClick?: (pointName: string) => void;
+  }
 }
 
 export function AppSidebar() {
     const { state, dispatch } = useStationContext();
-    const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({})
+    const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({});
     const [visibleTiff, setVisibleTiff] = useState<string | null>(null);
     
-    // NEW: State for selected water quality monitoring point
-    const [selectedWaterQualityPoint, setSelectedWaterQualityPoint] = useState<string>('SW8');
+    // State for selected water quality monitoring point
+    const [selectedWaterQualityPoint, setSelectedWaterQualityPoint] = useState<WaterQualityPointKeys>('SW8');
 
-    // NEW: Function to handle map point clicks
+    // Function to handle map point clicks
     const handleMapPointClick = (pointName: string) => {
-      if (waterQualityPointData[pointName]) {
+      if (isValidWaterQualityPoint(pointName)) {
         setSelectedWaterQualityPoint(pointName);
       }
     };
 
-    // NEW: Expose function globally so map can call it
+    // Expose function globally so map can call it
     if (typeof window !== 'undefined') {
-      (window as any).handleWaterQualityPointClick = handleMapPointClick;
+      window.handleWaterQualityPointClick = handleMapPointClick;
     }
 
     // Handle clicking on items (different behavior for Excel vs GeoJSON)
@@ -252,23 +273,23 @@ export function AppSidebar() {
     };
 
     const toggleLayer = (filename: string) => {
-      const updated = { ...visibleLayers, [filename]: !visibleLayers[filename] }
-      setVisibleLayers(updated)
+      const updated = { ...visibleLayers, [filename]: !visibleLayers[filename] };
+      setVisibleLayers(updated);
   
-      const isVisible = updated[filename]
+      const isVisible = updated[filename];
   
       if (filename === 'topography') {
-        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Top1_web.tif`
-        isVisible ? addRasterLayer('topography', url) : removeRasterLayer('topography')
+        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Top1_web.tif`;
+        isVisible ? addRasterLayer('topography', url) : removeRasterLayer('topography');
       } else if (filename === 'bedrock') {
-        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Bedrock1_web.tif`
-        isVisible ? addRasterLayer('bedrock', url) : removeRasterLayer('bedrock')
+        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Bedrock1_web.tif`;
+        isVisible ? addRasterLayer('bedrock', url) : removeRasterLayer('bedrock');
       } else if (filename) {
-        loadGeoJSON(filename, isVisible)
+        loadGeoJSON(filename, isVisible);
       }
-    }
+    };
 
-    // NEW: Render Water Quality Point Selection
+    // Render Water Quality Point Selection
     const renderWaterQualitySection = () => {
       const currentPointData = waterQualityPointData[selectedWaterQualityPoint];
       
@@ -279,7 +300,7 @@ export function AppSidebar() {
             <span className="font-medium">Selected: {currentPointData.name}</span>
           </div>
           <div className="grid grid-cols-5 gap-1 mb-3">
-            {Object.keys(waterQualityPointData).map((point) => (
+            {(Object.keys(waterQualityPointData) as WaterQualityPointKeys[]).map((point) => (
               <button
                 key={point}
                 onClick={() => handleMapPointClick(point)}
@@ -356,13 +377,13 @@ export function AppSidebar() {
           </div>
         ))}
       </div>
-    )
+    );
 
     // Render nested structure for Model Results and Scenarios
     const renderNestedStructure = (group: LayerItem[]) => (
       <div className="space-y-1 pl-4 py-1">
         {group.map((item) => {
-          // NEW: Special handling for Water Quality section
+          // Special handling for Water Quality section
           if (item.type === 'waterQuality') {
             return (
               <Collapsible key={item.label} className="group">
@@ -392,7 +413,7 @@ export function AppSidebar() {
                         <input
                           type="checkbox"
                           checked={!!visibleLayers[item.file]}
-                          onChange={() => toggleLayer(item.file!)}
+                          onChange={() => toggleLayer(item.file)}
                           className="mr-2"
                         />
                       )}
@@ -414,7 +435,7 @@ export function AppSidebar() {
                               <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
                             </CollapsibleTrigger>
                             <CollapsibleContent className="pl-4 space-y-1">
-                              {child.children.map((grandchild) => (
+                              {child.children!.map((grandchild) => (
                                 <div key={grandchild.label} className="flex items-center gap-2 text-sm py-1">
                                   {grandchild.type === 'excel' ? (
                                     <button
@@ -504,7 +525,7 @@ export function AppSidebar() {
       </div>
     );
 
-    const renderTiffCheckboxes = (group: fsmTF[]) => (
+    const renderTiffCheckboxes = (group: FsmTF[]) => (
       <div className="space-y-1 pl-4 py-1">
         {group.map(({ label, file }) => (
           <div key={label} className="flex items-center gap-2 text-sm">
@@ -577,7 +598,7 @@ export function AppSidebar() {
                             <SidebarMenuSub>
                             <CollapsibleContent className='max-h-screen overflow-scroll'>
                                   <SidebarMenu>
-                                    <Collapsible className='group' open={state.dataDisplayState}  onOpenChange={(open) => dispatch({ type: "TOGGLE_DATA_STATE", payload: open })}>
+                                    <Collapsible className='group' open={state.dataDisplayState}  onOpenChange={(open: boolean) => dispatch({ type: "TOGGLE_DATA_STATE", payload: open })}>
                                         <SidebarMenuSubItem >
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><Database className="h-4 w-4" /><p className="text-sm">Florida Stations (Data)</p></span>
@@ -590,7 +611,7 @@ export function AppSidebar() {
                                         </SidebarMenuSub>
                                         </SidebarMenuSubItem>
                                     </Collapsible>
-                                    <Collapsible className='group' open={state.resultsParentDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_PARENT_STATE", payload: open })}>
+                                    <Collapsible className='group' open={state.resultsParentDisplayState} onOpenChange={(open: boolean) => dispatch({ type: "TOGGLE_RESULTS_PARENT_STATE", payload: open })}>
                                         <SidebarMenuSubItem>
                                         <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                             <span className="flex items-center justify-center gap-2"><ChartNoAxesCombined className="h-4 w-4" /><p className="text-sm">AI Model (Results)</p></span>
@@ -599,7 +620,7 @@ export function AppSidebar() {
                                         <CollapsibleContent className='max-h-screen overflow-scroll'>
 
                                         <SidebarMenuSub>
-                                          <Collapsible className='group-1' open={state.resultsDisplayState} onOpenChange={(open) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
+                                          <Collapsible className='group-1' open={state.resultsDisplayState} onOpenChange={(open: boolean) => dispatch({ type: "TOGGLE_RESULTS_STATE", payload: open })}>
                                               <SidebarMenuSubItem >
                                               <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
                                                   <span className="flex items-center justify-center gap-2"><p className="text-sm">1. NBEATS Model (SW)</p></span>
