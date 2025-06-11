@@ -15,7 +15,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench } from "lucide-react";
+import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench, FileSpreadsheet, Download, MapPin, Droplets } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
@@ -25,39 +25,172 @@ const LeafletMapWithCOG = dynamic(() => import('@/components/LeafletMapWithCOG')
   ssr: false,
 });
 
+// Google Drive links for Excel files
+const excelLinks = {
+  calibration: 'https://docs.google.com/spreadsheets/d/175ex1CvdwvZDivJEmDpACAjtiv7vtdti/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  validation: 'https://docs.google.com/spreadsheets/d/1q9kC2yq43Ny3kaW-aI0KIB-kyNHTSdrj/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  transient: 'https://docs.google.com/spreadsheets/d/1RS4yEa7PnYqwsS5O_hrACBUn8Xs9K6N4/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  quality: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc1n: 'https://docs.google.com/spreadsheets/d/1-xhq5k7bPPIDYw1_ltuyIqxT5701r0ZH/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc2n: 'https://docs.google.com/spreadsheets/d/1ww98KfFAweMGHw0nTnP6Zi0F6TzxOYXU/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc3n: 'https://docs.google.com/spreadsheets/d/1uf5_YrRay_6hHpPqBYq1SgjamAxBX5Es/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc4n: 'https://docs.google.com/spreadsheets/d/1eiTXpcdDKGOS6N6Jz5bjoq0RQus0ASIR/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc5n: 'https://docs.google.com/spreadsheets/d/1TQ73-lru8Wi4zG6eKB468TEcrqTK2G7G/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc6n: 'https://docs.google.com/spreadsheets/d/1TxovyjS3azfPJ7OAcPPN_pRlM64nugoT/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+  sc7n: 'https://docs.google.com/spreadsheets/d/1fp6lwCsjNDRAgc40Mld5Vmx88viPxuNt/edit?usp=sharing&ouid=100448471119553937842&rtpof=true&sd=true',
+};
+
+// Updated Water Quality Data Links - Multi-Sheet Structure
+const waterQualityPointData = {
+  'SW1': {
+    name: 'SW1',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=80388670',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=80388670',
+    description: 'High nitrate levels (6-7 mg/L)',
+    status: 'Active Monitoring'
+  },
+  'SW2': {
+    name: 'SW2',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=1395270900',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=1395270900',
+    description: 'High nitrate levels (4-7 mg/L)',
+    status: 'Active Monitoring'
+  },
+  'SW4': {
+    name: 'SW4',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=45723149',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=45723149',
+    description: 'Low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'SW5': {
+    name: 'SW5',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=1738159344',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=1738159344',
+    description: 'Very low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'SW6': {
+    name: 'SW6',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=1101431023',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=1101431023',
+    description: 'Low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'SW7': {
+    name: 'SW7',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=1996146960',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=1996146960',
+    description: 'Very low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'SW8': {
+    name: 'SW8',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=835797608',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=835797608',
+    description: 'Very low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'SW9': {
+    name: 'SW9',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=512927320',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=512927320',
+    description: 'Very low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'SW10': {
+    name: 'SW10',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=196383291',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=196383291',
+    description: 'Very low nitrate levels',
+    status: 'Active Monitoring'
+  },
+  'Grove': {
+    name: 'Grove',
+    viewLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/edit#gid=1066857637',
+    downloadLink: 'https://docs.google.com/spreadsheets/d/16i-uDK0-SW074rWMMyy2JFHV5VxTQkJ8/export?format=xlsx&gid=1066857637',
+    description: 'Very low nitrate levels',
+    status: 'Active Monitoring'
+  }
+};
+
+// Updated data structure with new hierarchy
 const allGeoJSONLayers = {
   studyArea: [
-    { label: 'Boundary', file: 'boundary.geojson' },
-    { label: 'Buck Island Boundary', file: 'buck_island_boundary.geojson' },
+    { label: 'Boundary', file: 'boundary.geojson', type: 'geojson' },
+    { label: 'Buck Island Boundary', file: 'buck_island_boundary.geojson', type: 'geojson' },
   ],
   wells: [
-    { label: 'Pumping', file: 'pumping.geojson' },
-    { label: 'Observation', file: 'observation.geojson' },
+    { label: 'Pumping', file: 'pumping.geojson', type: 'geojson' },
+    { label: 'Observation', file: 'observation.geojson', type: 'geojson' },
+    { label: 'Water Quality', file: 'water_quality.geojson', type: 'geojson' },
   ],
   maps: [
-    { label: 'Topography', file: 'topography' }, // Raster
-    { label: 'River', file: 'river.geojson' },
-    { label: 'K', file: 'k.geojson' },
-    { label: 'Bedrock (Raster)', file: 'bedrock' }, // Raster
-    { label: 'Initial Starting Head', file: 'initial_starting_head.geojson' },
+    { label: 'Topography', file: 'topography', type: 'raster' },
+    { label: 'River', file: 'river.geojson', type: 'geojson' },
+    { label: 'K', file: 'k.geojson', type: 'geojson' },
+    { label: 'Bedrock (Raster)', file: 'bedrock', type: 'raster' },
+    { label: 'Initial Starting Head', file: 'initial_starting_head.geojson', type: 'geojson' },
   ],
   modelSetup: [
-    { label: 'Boundary Condition', file: 'boundary_condition.geojson' },
-    { label: 'GRID', file: 'grid.geojson' },
-    { label: 'Inflow', file: 'inflow.geojson' },
-    { label: 'Outflow', file: 'outflow.geojson' },
+    { label: 'Boundary Condition', file: 'boundary_condition.geojson', type: 'geojson' },
+    { label: 'GRID', file: 'grid.geojson', type: 'geojson' },
+    { label: 'Inflow', file: 'inflow.geojson', type: 'geojson' },
+    { label: 'Outflow', file: 'outflow.geojson', type: 'geojson' },
   ],
+  // Updated Model Results with nested structure
   modelResults: [
-    { label: 'Groundwater Elevation - Steady State', file: 'steadystate.geojson' },
-    { label: 'Groundwater Elevation - Transient', file: 'transient.geojson' },
-    { label: 'Water Quality', file: 'water_quality.geojson' },
+    {
+      label: 'Groundwater Elevation - Steady State',
+      type: 'parent',
+      file: 'steadystate.geojson',
+      children: [
+        { label: 'Calibration', file: excelLinks.calibration, type: 'excel' },
+        { label: 'Validation', file: excelLinks.validation, type: 'excel' },
+      ]
+    },
+    {
+      label: 'Groundwater Elevation - Transient',
+      type: 'parent',
+      file: 'transient.geojson',
+      children: [
+        { label: 'Transient', file: excelLinks.transient, type: 'excel' },
+      ]
+    },
+    {
+      label: 'Water Quality',
+      type: 'waterQuality', // CHANGED: from 'parent' to 'waterQuality'
+      children: [
+        { label: 'Quality', file: excelLinks.quality, type: 'excel' },
+      ]
+    },
   ],
+  // Updated Scenarios with nested structure
   scenarios: [
-    { label: 'Existing Condition - Fertilization', file: 'fertpast.geojson' },
-    { label: 'Existing Condition - Irrigation', file: 'irrigation.geojson' },
-    { label: 'Fertilizer Management', file: '' },
-    { label: 'Irrigation Management', file: '' },
-    { label: 'Pasture Management', file: '' },
+    {
+      label: 'Existing Condition',
+      type: 'parent',
+      children: [
+        { label: 'Fertilization', file: 'fertpast.geojson', type: 'geojson' },
+        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' },
+        {
+          label: 'Results',
+          type: 'parent',
+          children: [
+            { label: 'SC1-N', file: excelLinks.sc1n, type: 'excel' },
+            { label: 'SC2-N', file: excelLinks.sc2n, type: 'excel' },
+            { label: 'SC3-N', file: excelLinks.sc3n, type: 'excel' },
+            { label: 'SC4-N', file: excelLinks.sc4n, type: 'excel' },
+            { label: 'SC5-N', file: excelLinks.sc5n, type: 'excel' },
+            { label: 'SC6-N', file: excelLinks.sc6n, type: 'excel' },
+            { label: 'SC7-N', file: excelLinks.sc7n, type: 'excel' },
+          ]
+        }
+      ]
+    },
+    { label: 'Fertilizer Management', file: '', type: 'geojson' },
+    { label: 'Irrigation Management', file: '', type: 'geojson' },
+    { label: 'Pasture Management', file: '', type: 'geojson' },
   ],
 }
 
@@ -80,10 +213,43 @@ interface fsmTF {
   file: string
 }
 
+interface LayerItem {
+  label: string;
+  file: string;
+  type: 'geojson' | 'raster' | 'excel' | 'parent' | 'waterQuality'; // ADDED: 'waterQuality'
+  children?: LayerItem[];
+}
+
 export function AppSidebar() {
     const { state, dispatch } = useStationContext();
     const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({})
     const [visibleTiff, setVisibleTiff] = useState<string | null>(null);
+    
+    // NEW: State for selected water quality monitoring point
+    const [selectedWaterQualityPoint, setSelectedWaterQualityPoint] = useState<string>('SW8');
+
+    // NEW: Function to handle map point clicks
+    const handleMapPointClick = (pointName: string) => {
+      if (waterQualityPointData[pointName]) {
+        setSelectedWaterQualityPoint(pointName);
+      }
+    };
+
+    // NEW: Expose function globally so map can call it
+    if (typeof window !== 'undefined') {
+      (window as any).handleWaterQualityPointClick = handleMapPointClick;
+    }
+
+    // Handle clicking on items (different behavior for Excel vs GeoJSON)
+    const handleItemClick = (item: LayerItem) => {
+      if (item.type === 'excel') {
+        // Open Excel file in new tab
+        window.open(item.file, '_blank');
+      } else if (item.type === 'geojson' || item.type === 'raster') {
+        // Toggle layer visibility on map
+        toggleLayer(item.file);
+      }
+    };
 
     const toggleLayer = (filename: string) => {
       const updated = { ...visibleLayers, [filename]: !visibleLayers[filename] }
@@ -101,22 +267,242 @@ export function AppSidebar() {
         loadGeoJSON(filename, isVisible)
       }
     }
-  
-    const renderCheckboxes = (group: { label: string; file: string }[]) => (
+
+    // NEW: Render Water Quality Point Selection
+    const renderWaterQualitySection = () => {
+      const currentPointData = waterQualityPointData[selectedWaterQualityPoint];
+      
+      return (
+        <div className="pl-4 py-1">
+          {/* Point Selector */}
+          <div className="text-sm mb-2">
+            <span className="font-medium">Selected: {currentPointData.name}</span>
+          </div>
+          <div className="grid grid-cols-5 gap-1 mb-3">
+            {Object.keys(waterQualityPointData).map((point) => (
+              <button
+                key={point}
+                onClick={() => handleMapPointClick(point)}
+                className={`text-xs px-1 py-1 rounded ${
+                  selectedWaterQualityPoint === point
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {point}
+              </button>
+            ))}
+          </div>
+          
+          {/* Data Access */}
+          <div className="space-y-1">
+            <button
+              onClick={() => window.open(currentPointData.viewLink, '_blank')}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors text-sm"
+            >
+              <Eye className="h-3 w-3" />
+              View {currentPointData.name} (with Charts)
+            </button>
+            <button
+              onClick={() => window.open(currentPointData.downloadLink, '_blank')}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors text-sm"
+            >
+              <Download className="h-3 w-3" />
+              Download {currentPointData.name}
+            </button>
+          </div>
+
+          {/* Combined Quality File */}
+          <div className="border-t pt-2 mt-3">
+            <button
+              onClick={() => window.open(excelLinks.quality, '_blank')}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors text-sm"
+            >
+              <FileSpreadsheet className="h-3 w-3" />
+              Quality (Combined - All Points)
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    // Render simple items (for backwards compatibility)
+    const renderCheckboxes = (group: LayerItem[]) => (
       <div className="space-y-1 pl-4 py-1">
-        {group.map(({ label, file }) => (
-          <div key={label} className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={!!visibleLayers[file]}
-              disabled={!file}
-              onChange={() => toggleLayer(file)}
-            />
-            {label}
+        {group.map((item) => (
+          <div key={item.label} className="flex items-center gap-2 text-sm">
+            {item.type === 'excel' ? (
+              // Excel files - clickable link with icon
+              <button
+                onClick={() => handleItemClick(item)}
+                className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                disabled={!item.file}
+              >
+                <FileSpreadsheet className="h-3 w-3" />
+                {item.label}
+              </button>
+            ) : (
+              // GeoJSON/Raster files - checkbox
+              <>
+                <input
+                  type="checkbox"
+                  checked={!!visibleLayers[item.file]}
+                  disabled={!item.file}
+                  onChange={() => toggleLayer(item.file)}
+                />
+                {item.label}
+              </>
+            )}
           </div>
         ))}
       </div>
     )
+
+    // Render nested structure for Model Results and Scenarios
+    const renderNestedStructure = (group: LayerItem[]) => (
+      <div className="space-y-1 pl-4 py-1">
+        {group.map((item) => {
+          // NEW: Special handling for Water Quality section
+          if (item.type === 'waterQuality') {
+            return (
+              <Collapsible key={item.label} className="group">
+                <div className="flex flex-col">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
+                    <span className="flex items-center gap-2">
+                      <Droplets className="h-3 w-3 text-blue-600" />
+                      {item.label}
+                    </span>
+                    <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    {renderWaterQualitySection()}
+                  </CollapsibleContent>
+                </div>
+              </Collapsible>
+            );
+          }
+
+          if (item.type === 'parent' && item.children) {
+            return (
+              <Collapsible key={item.label} className="group">
+                <div className="flex flex-col">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
+                    <span className="flex items-center gap-2">
+                      {item.file && (
+                        <input
+                          type="checkbox"
+                          checked={!!visibleLayers[item.file]}
+                          onChange={() => toggleLayer(item.file!)}
+                          className="mr-2"
+                        />
+                      )}
+                      {item.label}
+                    </span>
+                    <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pl-4">
+                    {item.children.map((child) => {
+                      if (child.type === 'parent' && child.children) {
+                        // Nested parent (like "Results" under "Existing Condition")
+                        return (
+                          <Collapsible key={child.label} className="group mt-1">
+                            <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
+                              <span className="flex items-center gap-2">
+                                <ChevronUp className="h-3 w-3" />
+                                {child.label}
+                              </span>
+                              <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="pl-4 space-y-1">
+                              {child.children.map((grandchild) => (
+                                <div key={grandchild.label} className="flex items-center gap-2 text-sm py-1">
+                                  {grandchild.type === 'excel' ? (
+                                    <button
+                                      onClick={() => handleItemClick(grandchild)}
+                                      className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                      disabled={!grandchild.file}
+                                    >
+                                      <FileSpreadsheet className="h-3 w-3" />
+                                      {grandchild.label}
+                                    </button>
+                                  ) : (
+                                    <>
+                                      <input
+                                        type="checkbox"
+                                        checked={!!visibleLayers[grandchild.file]}
+                                        disabled={!grandchild.file}
+                                        onChange={() => toggleLayer(grandchild.file)}
+                                      />
+                                      {grandchild.label}
+                                    </>
+                                  )}
+                                </div>
+                              ))}
+                            </CollapsibleContent>
+                          </Collapsible>
+                        );
+                      } else {
+                        // Regular child item
+                        return (
+                          <div key={child.label} className="flex items-center gap-2 text-sm py-1">
+                            {child.type === 'excel' ? (
+                              <button
+                                onClick={() => handleItemClick(child)}
+                                className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                disabled={!child.file}
+                              >
+                                <FileSpreadsheet className="h-3 w-3" />
+                                {child.label}
+                              </button>
+                            ) : (
+                              <>
+                                <input
+                                  type="checkbox"
+                                  checked={!!visibleLayers[child.file]}
+                                  disabled={!child.file}
+                                  onChange={() => toggleLayer(child.file)}
+                                />
+                                {child.label}
+                              </>
+                            )}
+                          </div>
+                        );
+                      }
+                    })}
+                  </CollapsibleContent>
+                </div>
+              </Collapsible>
+            );
+          } else {
+            // Regular item (backwards compatibility)
+            return (
+              <div key={item.label} className="flex items-center gap-2 text-sm">
+                {item.type === 'excel' ? (
+                  <button
+                    onClick={() => handleItemClick(item)}
+                    className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                    disabled={!item.file}
+                  >
+                    <FileSpreadsheet className="h-3 w-3" />
+                    {item.label}
+                  </button>
+                ) : (
+                  <>
+                    <input
+                      type="checkbox"
+                      checked={!!visibleLayers[item.file]}
+                      disabled={!item.file}
+                      onChange={() => toggleLayer(item.file)}
+                    />
+                    {item.label}
+                  </>
+                )}
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
 
     const renderTiffCheckboxes = (group: fsmTF[]) => (
       <div className="space-y-1 pl-4 py-1">
@@ -254,7 +640,7 @@ export function AppSidebar() {
             </Collapsible>
 
 
-          {/* BMP Modeling Study */}
+          {/* BMP Modeling Study - Updated with new structure */}
           <Collapsible className="group/collapsible" >
             <SidebarMenuItem>
               <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-semibold px-2 py-2 rounded-md hover:bg-muted/60 transition">
@@ -273,7 +659,11 @@ export function AppSidebar() {
                             </CollapsibleTrigger>
                             <SidebarMenuSub>
                             <CollapsibleContent>
-                              {renderCheckboxes(data)}
+                              {/* Use nested structure for Model Results and Scenarios, simple for others */}
+                              {title === 'Model Results' || title === 'Scenarios' 
+                                ? renderNestedStructure(data)
+                                : renderCheckboxes(data)
+                              }
                             </CollapsibleContent>
                             </SidebarMenuSub>
                           </Collapsible>
