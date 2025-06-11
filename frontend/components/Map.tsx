@@ -91,13 +91,13 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
           fillOpacity: 0.2,
         },
         onEachFeature: (feature, layer) => {
-          if (specialPropsDisplay) {
+          if (specialPropsDisplay !== undefined) {
             const value = feature.properties?.[specialPropsDisplay.prop];
             const popupContent = value
               ? `<b>${specialPropsDisplay.label}</b>: ${value}`
               : `<i>No ${specialPropsDisplay.prop} property found</i>`;
             layer.bindPopup(popupContent);
-          } else if (fmData !== undefined) {
+          } else if (fmData !== null) {
             const staName = feature.properties?.NAME;
             const pair = (fmData as FertilizerData[])
               .filter(item => item && item.center_name === staName)
@@ -109,8 +109,7 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
                   ).join(""))
               : `<i>No results found</i>`;
             layer.bindPopup(popupContent);
-          }          
-           else {
+          } else {
             const props = feature.properties;
             if (props) {
               const popupContent = Object.entries(props)

@@ -104,7 +104,6 @@ export function AppSidebar() {
         const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/tiffs/Bedrock1_web.tif`
         isVisible ? addRasterLayer('bedrock', url) : removeRasterLayer('bedrock')
       } else if (filename) {
-        console.log("color and weight are: ", color, weight)
         if(color!=undefined && weight!=undefined) {
           const specialPropsDisplay : {prop: string, label: string} = { prop: 'Best_Model', label: 'Best Model' } 
           loadGeoJSON(filename, {visible: isVisible, color, weight, specialPropsDisplay: { prop: 'Best_Model', label: 'Best Model' },});          
