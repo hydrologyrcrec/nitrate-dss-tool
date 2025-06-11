@@ -1,0 +1,27 @@
+{
+"type": "FeatureCollection",
+"name": "n_obs_labels",
+"features": [
+{ "type": "Feature", "properties": { "label": "South Marsh East Lykes" }, "geometry": { "type": "Point", "coordinates": [ 594881.0, 1016160.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "W6" }, "geometry": { "type": "Point", "coordinates": [ 590442.0, 1017356.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "South Marsh Center" }, "geometry": { "type": "Point", "coordinates": [ 590528.0, 1014200.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "South Marsh West" }, "geometry": { "type": "Point", "coordinates": [ 583913.0, 1015904.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "770 East" }, "geometry": { "type": "Point", "coordinates": [ 584886.0, 1021261.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "West Marsh Center" }, "geometry": { "type": "Point", "coordinates": [ 583320.0, 1033450.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "West Marsh South" }, "geometry": { "type": "Point", "coordinates": [ 584066.0, 1027001.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Stargrass Field" }, "geometry": { "type": "Point", "coordinates": [ 586616.0, 1031128.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "West Marsh North" }, "geometry": { "type": "Point", "coordinates": [ 583353.0, 1036562.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Tropical West" }, "geometry": { "type": "Point", "coordinates": [ 587205.0, 1036549.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Bull Field North" }, "geometry": { "type": "Point", "coordinates": [ 587882.0, 1026051.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Eucalyptus" }, "geometry": { "type": "Point", "coordinates": [ 590478.0, 1028252.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Tropical East South" }, "geometry": { "type": "Point", "coordinates": [ 591340.0, 1036525.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "South Kuhn" }, "geometry": { "type": "Point", "coordinates": [ 592859.0, 1029529.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "WRP East Marsh North" }, "geometry": { "type": "Point", "coordinates": [ 597962.0, 1031416.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Shop Field" }, "geometry": { "type": "Point", "coordinates": [ 594920.0, 1026711.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "East Marsh South" }, "geometry": { "type": "Point", "coordinates": [ 598950.0, 1026439.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Grove" }, "geometry": { "type": "Point", "coordinates": [ 592135.0, 1020685.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "800 Arces #1" }, "geometry": { "type": "Point", "coordinates": [ 594814.0, 1021639.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "S5" }, "geometry": { "type": "Point", "coordinates": [ 599141.0, 1021975.0, 0.0 ] } },
+{ "type": "Feature", "properties": { "label": "Ceiling #3" }, "geometry": { "type": "Point", "coordinates": [ 588414.0, 1021547.0, 0.0 ] } }
+]
+}
