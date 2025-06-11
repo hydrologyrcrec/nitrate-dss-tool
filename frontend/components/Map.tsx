@@ -14,6 +14,13 @@ import { useStationContext } from '@/app/contexts/StationContext';
 import parseGeoraster from 'georaster'
 import GeoRasterLayer from 'georaster-layer-for-leaflet'
 
+type FertilizerData = {
+  id: number;
+  center_name: string;
+  fert_type: string;
+  link_url: string;
+};
+
 delete (L.Icon.Default.prototype as any)._getIconUrl
 
 const redIcon = new L.Icon({
@@ -67,13 +74,16 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
   fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/geojson/${filename}`)
     .then((res) => {
       const contentType = res.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        return res.json();
+      if (filename === 'N-OBS.json') {
+        const geojsonPromise = res.json();
+        const fmDataPromise = fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/api/fert-man-data`)
+          .then((res) => res.json());
+        return Promise.all([geojsonPromise, fmDataPromise]);
       } else {
-        throw new Error(`[${filename}] is not a GeoJSON file.`);
+        return res.json().then((geojson) => [geojson, null]); 
       }
     })
-    .then((geojsonData) => {
+    .then(([geojsonData, fmData]) => {
       const layer = L.geoJSON(geojsonData, {
         style: {
           color,
@@ -87,7 +97,20 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
               ? `<b>${specialPropsDisplay.label}</b>: ${value}`
               : `<i>No ${specialPropsDisplay.prop} property found</i>`;
             layer.bindPopup(popupContent);
-          } else {
+          } else if (fmData !== undefined) {
+            const staName = feature.properties?.NAME;
+            const pair = (fmData as FertilizerData[])
+              .filter(item => item && item.center_name === staName)
+              .map(item => [item.fert_type, item.link_url]);
+            const popupContent = pair.length > 0
+              ? (`<b>Name</b>: ${staName}<br>` +
+                  pair.map(([fertType, linkUrl]) =>
+                    `<b>${fertType}</b>: <a href="${linkUrl}" target="_blank">View Results</a><br>`
+                  ).join(""))
+              : `<i>No results found</i>`;
+            layer.bindPopup(popupContent);
+          }          
+           else {
             const props = feature.properties;
             if (props) {
               const popupContent = Object.entries(props)

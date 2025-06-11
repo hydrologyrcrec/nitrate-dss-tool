@@ -56,7 +56,7 @@ const allGeoJSONLayers = {
   scenarios: [
     { label: 'Existing Condition - Fertilization', file: 'fertpast.geojson' },
     { label: 'Existing Condition - Irrigation', file: 'irrigation.geojson' },
-    { label: 'Fertilizer Management', file: '' },
+    { label: 'Fertilizer Management', file: 'N-OBS.json' },
     { label: 'Irrigation Management', file: '' },
     { label: 'Pasture Management', file: '' },
   ],

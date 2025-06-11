@@ -141,6 +141,42 @@ def serve_tiff(filename):
 
     return send_from_directory(raster_folder, filename)
 
+@app.route('/api/fert-man-data', methods=['GET'])
+def fert_management():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Failed to connect to the database"}), 500
+
+    try:
+        cursor = conn.cursor()
+
+        # Query for fertilizer management data
+        fm_query = """
+        SELECT *
+        FROM fertilizer_management_data
+        """
+        cursor.execute(fm_query)
+        fm_rows = cursor.fetchall()
+        return jsonify(fm_rows)
+
+    except Exception as e:
+        print("Query failed:", e)
+        return jsonify({"error": "Query execution failed"}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route('/api/activate', methods=['GET'])
+def activate_server():
+    print("Server activated successfully")
+    return jsonify({ "message": "Server activated successfully" })
+
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5008))
     app.run(host="0.0.0.0", port=port, debug=True)
