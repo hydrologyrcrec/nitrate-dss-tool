@@ -167,10 +167,6 @@ def fert_management():
         cursor.close()
         conn.close()
 
-from flask import Flask, jsonify, request
-
-app = Flask(__name__)
-
 @app.route('/api/activate', methods=['GET'])
 def activate_server():
     print("Server activated successfully")

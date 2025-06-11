@@ -4,8 +4,8 @@ import { AuthForm } from "@/components/auth/auth-form"
 
 
 export const metadata: Metadata = {
-    title: "Hydrology AI Tool",
-    description: "Login to use the Hydrology AI Tool",
+    title: "Range AI",
+    description: "Login to use the Range AI Tool",
 }
 
 export default function SignUpPage() {
