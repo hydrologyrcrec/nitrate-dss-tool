@@ -15,7 +15,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench, FileSpreadsheet, Download, MapPin, Droplets, BadgeInfo, TrendingUpDown } from "lucide-react";
+import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench, FileSpreadsheet, Download, MapPin, Droplets, BadgeInfo, TrendingUpDown, RefreshCw } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
@@ -187,8 +187,14 @@ const allGeoJSONLayers = {
       type: 'parent' as const,
       file: '',
       children: [
+        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' as const },
         {
           label: 'Fertilization',
+          component: (
+            <span className="flex items-center gap-2">
+              <RefreshCw className="h-4 w-4" />Fertilization
+            </span>
+          ),
           type: 'parent' as const,
           file: '',
           children: [
@@ -196,9 +202,13 @@ const allGeoJSONLayers = {
             { label: 'Nodes', file: 'nodes.geojson', type: 'geojson' as const},
           ]
         },
-        { label: 'Irrigation', file: 'irrigation.geojson', type: 'geojson' as const },
         {
           label: 'Results (N)',
+          component: (
+            <span className="flex items-center gap-2">
+              <TrendingUpDown className="h-4 w-4" />Results (N)
+            </span>
+          ),
           type: 'parent' as const,
           file: '',
           children: [
@@ -452,8 +462,7 @@ export function AppSidebar() {
                           <Collapsible key={child.label} className="group mt-1">
                             <CollapsibleTrigger className="flex items-center justify-between w-full text-sm pb-2 font-medium hover:bg-muted/40 rounded transition">
                               <span className="flex items-center gap-2">
-                                <TrendingUpDown className="h-4 w-4" />
-                                {child.label}
+                                {child.component}
                               </span>
                               <ChevronUp className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
                             </CollapsibleTrigger>
