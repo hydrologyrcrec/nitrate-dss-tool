@@ -24,7 +24,7 @@ export interface State {
     drawState: boolean;
     dataDisplayState: boolean;
     resultsParentDisplayState: boolean;
-    resultsDisplayState: boolean;
+    resultsDisplayState: ResultsChildrenState;
   }
 
 export interface StationContextValue {
@@ -33,12 +33,18 @@ export interface StationContextValue {
     stationListRef: React.RefObject<HTMLUListElement | null>;
   }
 
+export interface ResultsChildrenState {
+  c1: boolean;
+  c2: boolean;
+  c3: boolean; 
+}
+
 export interface SetMultCompStatePayload {
     aiToolToggle: boolean;
     drawState: boolean;
     dataDisplayState: boolean;
     resultsParentDisplayState: boolean;
-    resultsDisplayState: boolean;
+    resultsDisplayState: ResultsChildrenState;
 }
 
 type Action =
@@ -48,7 +54,7 @@ type Action =
   | { type: 'SET_SURFACE_WATER_STATIONS'; payload: Station[] }
   | { type: 'TOGGLE_DATA_STATE'; payload: boolean }
   | { type: 'TOGGLE_RESULTS_PARENT_STATE'; payload: boolean }
-  | { type: 'TOGGLE_RESULTS_STATE'; payload: boolean }
+  | { type: 'TOGGLE_RESULTS_STATE'; payload: ResultsChildrenState }
   | { type: 'TOGGLE_AI_TOOL'; payload: boolean }
   | { type: 'SET_MULTIPLE_COMP_STATE'; payload: SetMultCompStatePayload };
 
@@ -59,7 +65,7 @@ const initialState: State = {
   drawState: false,
   dataDisplayState: false,
   resultsParentDisplayState: false,
-  resultsDisplayState: false
+  resultsDisplayState: {c1: false, c2: false, c3: false}
 };
 
 const reducer = (state: State, action: Action): State => {

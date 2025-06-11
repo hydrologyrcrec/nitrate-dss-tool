@@ -35,73 +35,99 @@ let map: L.Map | null = null
 let geoLayers: Record<string, L.GeoJSON> = {}
 let rasterLayers: Record<string, any> = {}
 
-export function loadGeoJSON(filename: string, visible: boolean, color: string = 'blue', weight: number = 2, fill: string = 'circleMarker') {
-  if (!map) return
+type GeoJsonOptions = {
+  visible: boolean;
+  color?: string;
+  weight?: number;
+  fill?: 'circle' | 'circleMarker';
+  specialPropsDisplay?: { prop: string; label: string };
+};
 
-  const existingLayer = geoLayers[filename]
+export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
+  if (!map) return;
+
+  const {
+    visible,
+    color = 'blue',
+    weight = 2,
+    fill = 'circleMarker',
+    specialPropsDisplay,
+  } = options;
+
+  const existingLayer = geoLayers[filename];
   if (existingLayer) {
     if (!visible) {
-      map.removeLayer(existingLayer)
+      map.removeLayer(existingLayer);
     } else {
-      existingLayer.addTo(map)
+      existingLayer.addTo(map);
     }
-    return
+    return;
   }
 
   fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/geojson/${filename}`)
     .then((res) => {
-      const contentType = res.headers.get('content-type') || ''
+      const contentType = res.headers.get('content-type') || '';
       if (contentType.includes('application/json')) {
-        return res.json()
+        return res.json();
       } else {
-        throw new Error(`[${filename}] is not a GeoJSON file.`)
+        throw new Error(`[${filename}] is not a GeoJSON file.`);
       }
     })
     .then((geojsonData) => {
       const layer = L.geoJSON(geojsonData, {
         style: {
-          color: color,
-          weight: weight,
+          color,
+          weight,
           fillOpacity: 0.2,
         },
         onEachFeature: (feature, layer) => {
-          const props = feature.properties
-          if (props) {
-            const popupContent = Object.entries(props)
-              .map(([key, val]) => `<b>${key}</b>: ${val}`)
-              .join('<br>')
-            layer.bindPopup(popupContent)
+          if (specialPropsDisplay) {
+            const value = feature.properties?.[specialPropsDisplay.prop];
+            const popupContent = value
+              ? `<b>${specialPropsDisplay.label}</b>: ${value}`
+              : `<i>No ${specialPropsDisplay.prop} property found</i>`;
+            layer.bindPopup(popupContent);
+          } else {
+            const props = feature.properties;
+            if (props) {
+              const popupContent = Object.entries(props)
+                .map(([key, val]) => `<b>${key}</b>: ${val}`)
+                .join('<br>');
+              layer.bindPopup(popupContent);
+            }
           }
         },
         pointToLayer: (feature, latlng) =>
-          fill === 'circle' ?
-          L.circle(latlng, {
-            radius: 5,
-            fillColor: '#007BFF',
-            color: '#fff',
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8,
-          }): L.circleMarker(latlng, {
-            radius: 5,
-            fillColor: '#007BFF',
-            color: '#fff',
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8,
-          }),
-      })
+          fill === 'circle'
+            ? L.circle(latlng, {
+                radius: 5,
+                fillColor: '#007BFF',
+                color: '#fff',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8,
+              })
+            : L.circleMarker(latlng, {
+                radius: 5,
+                fillColor: '#007BFF',
+                color: '#fff',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8,
+              }),
+      });
 
-      geoLayers[filename] = layer
+      geoLayers[filename] = layer;
       if (visible) {
-        layer.addTo(map!)
+        layer.addTo(map!);
         try {
-          map!.fitBounds(layer.getBounds())
+          map!.fitBounds(layer.getBounds());
         } catch {}
       }
     })
-    .catch((err) => console.error('Failed to load GeoJSON:', err.message))
+    .catch((err) => console.error('Failed to load GeoJSON:', err.message));
 }
+
 
 interface ExtendedGeoRaster {
   noDataValue?: number;
@@ -190,9 +216,9 @@ export default function Map() {
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
       const { ground_water, surface_water } = response.data;
-      loadGeoJSON('ground_water_wells.json', true, '#2b82cb', 10);
-      loadGeoJSON('surface_water_stations.json', true, '#ca273e', 10);
-      dispatch({ type: 'SET_MULTIPLE_COMP_STATE', payload: {aiToolToggle: true, drawState: true, dataDisplayState: true, resultsParentDisplayState: true, resultsDisplayState: true}});
+      // loadGeoJSON('ground_water_wells.json', true, '#2b82cb', 10);
+      // loadGeoJSON('surface_water_stations.json', true, '#ca273e', 10);
+      dispatch({ type: 'SET_MULTIPLE_COMP_STATE', payload: {aiToolToggle: true, drawState: true, dataDisplayState: true, resultsParentDisplayState: true, resultsDisplayState: {...state.resultsDisplayState, c1: true}}});
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });
       ground_water.forEach((station: any) => {
