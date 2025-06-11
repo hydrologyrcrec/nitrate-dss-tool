@@ -15,7 +15,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench, FileSpreadsheet, Download, MapPin, Droplets } from "lucide-react";
+import { ChevronUp , Database, Map, ChartNoAxesCombined, Package, BrickWall, LandPlot, Layers, LoaderPinwheel, PenLine, Sparkle, MapPinned, Eye, Wrench, FileSpreadsheet, Download, MapPin, Droplets, BadgeInfo, TrendingUpDown } from "lucide-react";
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
@@ -125,6 +125,8 @@ interface LayerItem {
   file: string;
   type: 'geojson' | 'raster' | 'excel' | 'parent' | 'waterQuality';
   children?: LayerItem[];
+  icon?: React.ReactNode;
+  component?: React.ReactNode;
 }
 
 // Updated data structure with new hierarchy
@@ -183,6 +185,11 @@ const allGeoJSONLayers = {
   scenarios: [
     {
       label: 'Existing Condition',
+      component: (
+        <span className="flex items-center gap-2 pb-1">
+          <BadgeInfo className="h-4 w-4" /> Existing Condition
+        </span>
+      ),
       type: 'parent' as const,
       file: '',
       children: [
@@ -294,7 +301,7 @@ export function AppSidebar() {
       const currentPointData = waterQualityPointData[selectedWaterQualityPoint];
       
       return (
-        <div className="pl-4 py-1">
+        <div className="pl-8 py-1">
           {/* Point Selector */}
           <div className="text-sm mb-2">
             <span className="font-medium">Selected: {currentPointData.name}</span>
@@ -321,14 +328,14 @@ export function AppSidebar() {
               onClick={() => window.open(currentPointData.viewLink, '_blank')}
               className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors text-sm"
             >
-              <Eye className="h-3 w-3" />
+              <Eye className="h-4 w-4" />
               View {currentPointData.name} (with Charts)
             </button>
             <button
               onClick={() => window.open(currentPointData.downloadLink, '_blank')}
               className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors text-sm"
             >
-              <Download className="h-3 w-3" />
+              <Download className="h-4 w-4" />
               Download {currentPointData.name}
             </button>
           </div>
@@ -339,7 +346,7 @@ export function AppSidebar() {
               onClick={() => window.open(excelLinks.quality, '_blank')}
               className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors text-sm"
             >
-              <FileSpreadsheet className="h-3 w-3" />
+              <FileSpreadsheet className="h-4 w-4" />
               Quality (Combined - All Points)
             </button>
           </div>
@@ -359,7 +366,7 @@ export function AppSidebar() {
                 className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                 disabled={!item.file}
               >
-                <FileSpreadsheet className="h-3 w-3" />
+                <FileSpreadsheet className="h-4 w-4" />
                 {item.label}
               </button>
             ) : (
@@ -388,12 +395,12 @@ export function AppSidebar() {
             return (
               <Collapsible key={item.label} className="group">
                 <div className="flex flex-col">
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-sm font-medium hover:bg-muted/40 rounded transition">
                     <span className="flex items-center gap-2">
-                      <Droplets className="h-3 w-3 text-blue-600" />
+                      <Droplets className="h-4 w-4 text-blue-600" />
                       {item.label}
                     </span>
-                    <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                    <ChevronUp className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     {renderWaterQualitySection()}
@@ -407,32 +414,32 @@ export function AppSidebar() {
             return (
               <Collapsible key={item.label} className="group">
                 <div className="flex flex-col">
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
-                    <span className="flex items-center gap-2">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-sm gap-3 font-medium hover:bg-muted/40 rounded transition">
+                    <span className="flex justify-start items-center gap-2">
                       {item.file && (
                         <input
                           type="checkbox"
                           checked={!!visibleLayers[item.file]}
                           onChange={() => toggleLayer(item.file)}
-                          className="mr-2"
+                          className=""
                         />
                       )}
-                      {item.label}
+                      {item.component? item.component : <p className='text-left'>{item.label}</p>}
                     </span>
-                    <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                    <ChevronUp className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-4">
+                  <CollapsibleContent className="pl-8">
                     {item.children.map((child) => {
                       if (child.type === 'parent' && child.children) {
                         // Nested parent (like "Results" under "Existing Condition")
                         return (
                           <Collapsible key={child.label} className="group mt-1">
-                            <CollapsibleTrigger className="flex items-center justify-between w-full text-sm px-2 py-1 font-medium hover:bg-muted/40 rounded transition">
+                            <CollapsibleTrigger className="flex items-center justify-between w-full text-sm pb-2 font-medium hover:bg-muted/40 rounded transition">
                               <span className="flex items-center gap-2">
-                                <ChevronUp className="h-3 w-3" />
+                                <TrendingUpDown className="h-4 w-4" />
                                 {child.label}
                               </span>
-                              <ChevronUp className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180" />
+                              <ChevronUp className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
                             </CollapsibleTrigger>
                             <CollapsibleContent className="pl-4 space-y-1">
                               {child.children!.map((grandchild) => (
@@ -443,7 +450,7 @@ export function AppSidebar() {
                                       className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                                       disabled={!grandchild.file}
                                     >
-                                      <FileSpreadsheet className="h-3 w-3" />
+                                      <FileSpreadsheet className="h-4 w-4" />
                                       {grandchild.label}
                                     </button>
                                   ) : (
@@ -472,7 +479,7 @@ export function AppSidebar() {
                                 className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                                 disabled={!child.file}
                               >
-                                <FileSpreadsheet className="h-3 w-3" />
+                                <FileSpreadsheet className="h-4 w-4" />
                                 {child.label}
                               </button>
                             ) : (
@@ -504,7 +511,7 @@ export function AppSidebar() {
                     className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                     disabled={!item.file}
                   >
-                    <FileSpreadsheet className="h-3 w-3" />
+                    <FileSpreadsheet className="h-4 w-4" />
                     {item.label}
                   </button>
                 ) : (
