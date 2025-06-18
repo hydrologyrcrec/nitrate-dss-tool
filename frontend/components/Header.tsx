@@ -2,6 +2,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
+import { apiUrl } from "./apiurl";
 
 export default function Header() {
   const router = useRouter();
@@ -13,7 +14,10 @@ export default function Header() {
   }
 
   const handleLogout = async () => {
-    const response = await fetch("/api/logout", {
+    await apiUrl.post(`/api/auth/logout`, {
+      credentials: "include",
+    });
+    const response = await fetch("/api/clear-cookies", {
       method: "POST",
     });
     if(response.ok){
