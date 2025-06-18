@@ -49,3 +49,11 @@ def generate_new_access_token(refresh_token: str):
     except jwt.InvalidTokenError:
         print("Invalid refresh token.")
         return None
+
+def verify_access_token(token: str):
+    try:
+        return jwt.decode(token, os.getenv("ACCESS_TOKEN_SECRET", "jwtsecret"), algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None

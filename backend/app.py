@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 from db import get_db_connection
 from auth.routes import auth_bp
+from middleware import register_middleware
+
 
 load_dotenv()
 
@@ -12,6 +14,8 @@ app = Flask(__name__)
 CORS(app,
      supports_credentials=True,
      resources={r"/*": {"origins": ["http://localhost:3000", os.environ.get("WEBSITE_URL")]}})
+
+register_middleware(app)
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
@@ -119,7 +123,7 @@ def get_stations():
         cursor.close()
         conn.close()
 
-@app.route('/geojson/<path:filename>', methods=['GET'])
+@app.route('/api/geojson/<path:filename>', methods=['GET'])
 def serve_geojson(filename):
     geojson_folder = os.path.join(os.path.dirname(__file__), 'GeoJSON_GG')
     file_path = os.path.join(geojson_folder, filename)
@@ -131,7 +135,7 @@ def serve_geojson(filename):
         content = f.read()
     return Response(content, mimetype='application/json')
 
-@app.route('/tiffs/<path:filename>', methods=['GET'])
+@app.route('/api/tiffs/<path:filename>', methods=['GET'])
 def serve_tiff(filename):
     raster_folder = os.path.join(os.path.dirname(__file__), 'Raster_TIFFs')
     file_path = os.path.join(raster_folder, filename)

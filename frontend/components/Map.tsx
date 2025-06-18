@@ -71,7 +71,7 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
     return;
   }
 
-  fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/geojson/${filename}`)
+  fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/api/geojson/${filename}`)
     .then((res) => {
       const contentType = res.headers.get('content-type') || '';
       if (filename === 'N-OBS.json') {
