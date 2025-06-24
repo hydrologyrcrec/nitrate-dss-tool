@@ -254,8 +254,12 @@ const bmpHeaders = [
 ];
 
 const fsmTiffFiles = [
-  {label: 'Drainage', file: 'Drainage_cog_v2.tif'},
-  {label: 'Flood Inventory', file: 'Flood_inventory_cog_v1.tif'},
+  {label: 'Drainage', file: 'Drainage_cog.tif'},
+  {label: 'Flood Inventory', file: 'Flood_inventory_map_cog.tif'},
+  {label: 'Lithology 1', file: 'Lithology_cog.tif'},
+  {label: 'Slope', file: 'Slope_cog.tif'},
+  {label: 'tiffland', file: 'tiffland_cog.tif'},
+  {label: 'tiffagri', file: 'tiffagri_cog.tif'},
 ]
 
 const swGwList = [
