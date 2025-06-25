@@ -6,14 +6,16 @@ EXCLUDED_ROUTES = ['/api/auth/signin', '/api/auth/signup', '/api/auth/logout', '
 def register_middleware(app):
     @app.before_request
     def check_token():
+        if request.method == "OPTIONS":
+            return
+         
         if request.path in EXCLUDED_ROUTES or request.path.startswith('/static/'):
             return
-
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith("Bearer "):
+        cookies = request.cookies
+        token = request.cookies.get("accessToken")
+        if not token:
             return jsonify({"error": "Token missing"}), 401
 
-        token = auth_header.split(" ")[1]
         decoded = verify_access_token(token)
 
         if not decoded:

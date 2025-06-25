@@ -71,16 +71,15 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
     return;
   }
 
-  fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/api/geojson/${filename}`)
+  apiUrl.get(`/api/geojson/${filename}`)
     .then((res) => {
-      const contentType = res.headers.get('content-type') || '';
+      const contentType = res.headers['content-type'] || '';
       if (filename === 'N-OBS.json') {
-        const geojsonPromise = res.json();
-        const fmDataPromise = fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5008"}/api/fert-man-data`)
-          .then((res) => res.json());
+        const geojsonPromise = Promise.resolve(res.data);
+        const fmDataPromise = apiUrl.get(`/api/fert-man-data`).then(r => r.data);
         return Promise.all([geojsonPromise, fmDataPromise]);
       } else {
-        return res.json().then((geojson) => [geojson, null]); 
+        return Promise.resolve([res.data, null]);
       }
     })
     .then(([geojsonData, fmData]) => {
@@ -147,7 +146,9 @@ export function loadGeoJSON(filename: string, options: GeoJsonOptions) {
         } catch {}
       }
     })
-    .catch((err) => console.error('Failed to load GeoJSON:', err.message));
+    .catch((err) => {
+      console.error('Failed to load GeoJSON:', err.message || err);
+    });
 }
 
 
@@ -238,8 +239,6 @@ export default function Map() {
       const coordinates = latlngs.map((p: any) => [p.lng, p.lat]);
       const response = await apiUrl.post('/api/stations-in-polygon', { coordinates });
       const { ground_water, surface_water } = response.data;
-      // loadGeoJSON('ground_water_wells.json', true, '#2b82cb', 10);
-      // loadGeoJSON('surface_water_stations.json', true, '#ca273e', 10);
       dispatch({ type: 'SET_MULTIPLE_COMP_STATE', payload: {aiToolToggle: true, drawState: true, dataDisplayState: true, resultsParentDisplayState: true, resultsDisplayState: {...state.resultsDisplayState, c1: true}}});
       dispatch({ type: 'SET_STATIONS', payload: ground_water });
       dispatch({ type: 'SET_SURFACE_WATER_STATIONS', payload: surface_water });

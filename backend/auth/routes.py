@@ -22,6 +22,7 @@ def signin_route():
         }))
 
         res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
+        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
         res.headers["authorization"] = response["access_token"]
         return res
     else:
@@ -43,6 +44,7 @@ def signup_route():
             "accessToken": response["access_token"]
         }))
 
+        res.set_cookie("accessToken", response["access_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
         res.set_cookie("refreshToken", response["refresh_token"], secure=True, httponly=True, samesite="None", max_age=86400, path="/")
         res.headers["authorization"] = response["access_token"]
         return res
@@ -58,6 +60,7 @@ def refresh_token_route():
     if not new_access_token:
         return jsonify({"error": "Refresh token Expired. Please Login again"}), 401
     res = make_response(jsonify({"accessToken": new_access_token}))
+    res.set_cookie("accessToken", new_access_token, secure=True, httponly=True, samesite="None", max_age=86400, path="/")
     return res
 
 @auth_bp.route("/logout", methods=["POST"])
