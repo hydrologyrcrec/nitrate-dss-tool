@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import RefreshPage from '@/components/RefreshClient';
+import RefreshPage from '@/components/RefreshClient1';
 
 export default function RefreshPageWrapper() {
   return (

@@ -126,7 +126,7 @@ def get_stations():
 
 @app.route('/api/geojson/<path:filename>', methods=['GET'])
 def serve_geojson(filename):
-    s3_url = f"${os.environ.get('S3_URL')}/geojson/{filename}"
+    s3_url = f"{os.environ.get('S3_URL')}/geojson/{filename}"
     s3_response = requests.get(s3_url)
 
     if s3_response.status_code != 200:
@@ -136,7 +136,7 @@ def serve_geojson(filename):
 
 @app.route('/api/tiffs/<path:filename>', methods=['GET'])
 def serve_tiff(filename):
-    s3_url = f"${os.environ.get('S3_URL')}/tiffs/{filename}"
+    s3_url = f"{os.environ.get('S3_URL')}/tiffs/{filename}"
     s3_response = requests.get(s3_url)
 
     if s3_response.status_code != 200:
