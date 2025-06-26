@@ -161,9 +161,9 @@ interface ExtendedGeoRaster {
 export function addRasterLayer(name: string, url: string) {
   if (!map || rasterLayers[name]) return
 
-  fetch(url)
-    .then(res => res.arrayBuffer())
-    .then(parseGeoraster)
+  apiUrl
+    .get(url, { responseType: 'arraybuffer' }) // Important for binary data
+    .then(res => parseGeoraster(res.data))
     .then(georaster => {
       const extended = georaster as ExtendedGeoRaster
 

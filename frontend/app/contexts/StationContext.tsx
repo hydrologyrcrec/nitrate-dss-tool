@@ -1,7 +1,7 @@
 // contexts/StationContext.tsx
 'use client';
 
-import React, { createContext, useRef, useReducer, useContext } from 'react';
+import React, { createContext, useRef, useReducer, useContext, useState } from 'react';
 
 export interface StationLink {
     label: string;
@@ -31,6 +31,14 @@ export interface StationContextValue {
     state: State;
     dispatch: React.Dispatch<Action>;
     stationListRef: React.RefObject<HTMLUListElement | null>;
+    mapStateVars: {
+      visibleLayers: Record<string, boolean>;
+      setVisibleLayers: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+      visibleTiff: string | null;
+      setVisibleTiff: React.Dispatch<React.SetStateAction<string | null>>;
+      selectedWaterQualityPoint: WaterQualityPointKeys;
+      setSelectedWaterQualityPoint: React.Dispatch<React.SetStateAction<WaterQualityPointKeys>>;
+    };
   }
 
 export interface ResultsChildrenState {
@@ -98,9 +106,13 @@ export const StationContext = createContext<StationContextValue | null>(null);
 export const StationProvider = ({ children }: { children: React.ReactNode }) => {
   const stationListRef = useRef<HTMLUListElement | null>(null);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({});
+  const [visibleTiff, setVisibleTiff] = useState<string | null>(null);
+  const [selectedWaterQualityPoint, setSelectedWaterQualityPoint] = useState<WaterQualityPointKeys>('SW8');
+  const mapStateVars = { visibleLayers, setVisibleLayers, visibleTiff, setVisibleTiff, selectedWaterQualityPoint, setSelectedWaterQualityPoint };
 
   return (
-    <StationContext.Provider value={{ state, dispatch, stationListRef }}>
+    <StationContext.Provider value={{ state, dispatch, stationListRef, mapStateVars }}>
       {children}
     </StationContext.Provider>
   );
