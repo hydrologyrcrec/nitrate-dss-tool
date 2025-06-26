@@ -15,7 +15,7 @@ export default function LeafletMapWithCOG({file}: {file: string}) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy; OpenStreetMap contributors"
       />
-      <COGViewer url={`https://fsm-geo-tiff-data.s3.us-east-2.amazonaws.com/${file}`} />
+      <COGViewer url={`${process.env.NEXT_PUBLIC_S3_URL}/cogs/${file}`} />
     </MapContainer>
   );
 }

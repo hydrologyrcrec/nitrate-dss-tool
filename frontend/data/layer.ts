@@ -93,8 +93,8 @@ export const fsmTiffFiles = [
     {label: 'tiffagri', file: 'tiffagri_cog.tif'},
     {label: 'tiff2rangeland', file: 'tiff2rangeland_cog.tif'},
     {label: 'copytiffupland', file: 'copytiffupland_cog.tif'},
-    {label: 'tiffland', file: 'tiffland_cog.tif'},
-    {label: 'TWI', file: 'TWI_cog.tif'},
+    // {label: 'tiffland', file: 'tiffland_cog.tif'},
+    // {label: 'TWI', file: 'TWI_cog.tif'},
     {label: 'topo', file: 'topo_cog.tif'}
 ]
 

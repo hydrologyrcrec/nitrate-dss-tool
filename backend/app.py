@@ -5,6 +5,7 @@ import os
 from db import get_db_connection
 from auth.routes import auth_bp
 from middleware import register_middleware
+import requests
 
 
 load_dotenv()
@@ -125,25 +126,23 @@ def get_stations():
 
 @app.route('/api/geojson/<path:filename>', methods=['GET'])
 def serve_geojson(filename):
-    geojson_folder = os.path.join(os.path.dirname(__file__), 'GeoJSON_GG')
-    file_path = os.path.join(geojson_folder, filename)
+    s3_url = f"${os.environ.get('S3_URL')}/geojson/{filename}"
+    s3_response = requests.get(s3_url)
 
-    if not os.path.exists(file_path):
+    if s3_response.status_code != 200:
         return jsonify({"error": "File not found"}), 404
 
-    with open(file_path, 'r') as f:
-        content = f.read()
-    return Response(content, mimetype='application/json')
+    return Response(s3_response.content, mimetype='application/json')
 
 @app.route('/api/tiffs/<path:filename>', methods=['GET'])
 def serve_tiff(filename):
-    raster_folder = os.path.join(os.path.dirname(__file__), 'Raster_TIFFs')
-    file_path = os.path.join(raster_folder, filename)
+    s3_url = f"${os.environ.get('S3_URL')}/tiffs/{filename}"
+    s3_response = requests.get(s3_url)
 
-    if not os.path.exists(file_path):
+    if s3_response.status_code != 200:
         return jsonify({"error": "Raster file not found"}), 404
 
-    return send_from_directory(raster_folder, filename)
+    return Response(s3_response.content, content_type='application/octet-stream')
 
 @app.route('/api/fert-man-data', methods=['GET'])
 def fert_management():
