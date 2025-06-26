@@ -1,6 +1,6 @@
 'use client'
 
-import { loadGeoJSON, addRasterLayer, removeRasterLayer } from '@/components/Map'
+import { loadGeoJSON, addRasterLayer, removeRasterLayer } from '@/components/SwGwMapLayout'
 import { waterQualityPointData } from '@/data/layer';
 
 

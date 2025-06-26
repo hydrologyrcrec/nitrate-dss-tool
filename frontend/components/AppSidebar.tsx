@@ -17,8 +17,8 @@ import { ChevronUp , Database, ChartNoAxesCombined, LandPlot, Layers, MapPinned,
 import StationList from './StationList';
 import SWStationList from "./SwStationList";
 import { useStationContext } from "@/app/contexts/StationContext";
-import LeafletMapWithCOG from '@/components/LeafletMapWithCOG';
-import { bmpHeaders } from './Data';
+import LeafletMapWithCOG from '@/components/LeafletMapWithCog';
+import { bmpHeaders } from './DataLayout';
 import { handleMapPointClick, renderCheckboxes, renderNestedStructure, renderSwGwCheckboxes, renderTiffCheckboxes } from './LayerRenderers';
 import { fsmTiffFiles, swGwList } from '@/data/layer';
 

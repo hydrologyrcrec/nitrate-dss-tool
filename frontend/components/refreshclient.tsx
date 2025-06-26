@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { apiUrl } from '@/components/apiurl';
+import { apiUrl } from '@/components/ApiUrl';
 
 export default function RefreshPage() {
   const router = useRouter();

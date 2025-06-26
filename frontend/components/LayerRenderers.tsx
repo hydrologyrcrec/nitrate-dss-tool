@@ -4,7 +4,7 @@ import { useStationContext } from "@/app/contexts/StationContext";
 import { excelLinks, waterQualityPointData } from "@/data/layer";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { ChevronUp, Download, Droplets, Eye, FileSpreadsheet } from "lucide-react";
-import { handleItemClick, isValidWaterQualityPoint, toggleLayer } from "./mapLayerUtils";
+import { handleItemClick, isValidWaterQualityPoint, toggleLayer } from "./MapUtils";
 
     // Function to handle map point clicks
 export const handleMapPointClick = (pointName: string, setSelectedWaterQualityPoint: React.Dispatch<React.SetStateAction<WaterQualityPointKeys>>) => {

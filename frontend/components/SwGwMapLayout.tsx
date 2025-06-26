@@ -8,7 +8,7 @@ import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster'
-import { apiUrl } from './apiurl'
+import { apiUrl } from './ApiUrl'
 import { useStationContext } from '@/app/contexts/StationContext';
 
 import parseGeoraster from 'georaster'
@@ -198,7 +198,7 @@ export function removeRasterLayer(name: string) {
   delete rasterLayers[name]
 }
 
-export default function Map() {
+export default function SwGwMap() {
   const mapRef = useRef<L.Map | null>(null)
   const drawnItemsRef = useRef<L.FeatureGroup>(new L.FeatureGroup())
   const { state, dispatch } = useStationContext();

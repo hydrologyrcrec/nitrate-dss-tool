@@ -2,7 +2,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { apiUrl } from "./apiurl";
+import { apiUrl } from "./ApiUrl";
 
 export default function Header() {
   const router = useRouter();
